@@ -128,6 +128,9 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
+        // Master Administrator UID
+        const MASTER_ADMIN_UID = "iLYylCZfyJPPN6h5Qmuof2xuKgu1";
+
         // Tab Switching
         window.switchTab = function(tab) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -142,7 +145,7 @@
             }
         };
 
-        // Production-Ready Admin Login
+        // Strict Authenticated Admin Login
         window.loginAdmin = async function() {
             const email = document.getElementById('aEmail').value.trim();
             const pass = document.getElementById('aPass').value.trim();
@@ -153,25 +156,28 @@
                 return;
             }
             
-            btn.innerHTML = "Authenticating... <i class='fa-solid fa-spinner fa-spin'></i>";
+            btn.innerHTML = "Verifying Credentials... <i class='fa-solid fa-spinner fa-spin'></i>";
             btn.disabled = true;
 
-            // 1. MASTER BYPASS FALLBACK (Zero latency during live judge presentation)
-            if (email.toLowerCase() === "marquesjoe07@gmail.com" && pass === "Pdjnexus") {
-                sessionStorage.setItem("nexusUserRole", "master_admin");
-                sessionStorage.setItem("nexusAdminEmail", email);
-                window.location.href = "admin_dashboard.html";
-                return;
-            }
-
-            // 2. FIREBASE AUTHENTICATION (For dynamically added admins)
             try {
-                await signInWithEmailAndPassword(auth, email, pass);
-                sessionStorage.setItem("nexusUserRole", "admin");
-                sessionStorage.setItem("nexusAdminEmail", email);
+                // Firebase Database se authentic credentials verify karta hai
+                const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+                const user = userCredential.user;
+
+                // Role allocation based on exact UID
+                if (user.uid === MASTER_ADMIN_UID) {
+                    sessionStorage.setItem("nexusUserRole", "master_admin");
+                } else {
+                    sessionStorage.setItem("nexusUserRole", "co_admin");
+                }
+
+                sessionStorage.setItem("nexusAdminEmail", user.email);
+                sessionStorage.setItem("nexusAdminUid", user.uid);
+
                 window.location.href = "admin_dashboard.html";
+
             } catch(error) {
-                alert("Login Failed: " + error.message);
+                alert("Access Denied: Sirf authorized Sparks Admins hi enter kar sakte hain!");
                 btn.innerHTML = "Authorize Access <i class='fa-solid fa-lock'></i>";
                 btn.disabled = false;
             }
@@ -192,7 +198,6 @@
             sessionStorage.setItem("nexusViewerRole", role);
             sessionStorage.setItem("nexusViewerId", id);
             
-            // Direct launch into viewer dashboard
             window.location.href = "viewer_dashboard.html";
         };
     </script>
