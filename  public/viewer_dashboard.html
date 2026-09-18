@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus-E | Live Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <style>
+        :root {
+            --bg-base: #050811;
+            --card-bg: rgba(13, 22, 41, 0.75);
+            --border: rgba(6, 182, 212, 0.25);
+            --cyan: #06b6d4;
+            --blue: #3b82f6;
+            --emerald: #10b981;
+            --red: #ef4444;
+            --amber: #f59e0b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-base);
+            background-image: 
+                radial-gradient(circle at 50% -10%, #1e3a8a 0%, transparent 60%),
+                radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
+            color: #f8fafc;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1150px; margin: 0 auto; }
+
+        /* Top Header Navigation */
+        header {
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+            padding: 20px 26px; background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 20px; backdrop-filter: blur(16px); margin-bottom: 22px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(6, 182, 212, 0.05);
+        }
+        .brand-box h1 {
+            font-size: 2.2rem; font-weight: 900; letter-spacing: 1.5px;
+            background: linear-gradient(135deg, #ffffff 40%, var(--cyan) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        .brand-box .by-tag {
+            font-size: 0.95rem; font-weight: 600; color: #94a3b8; letter-spacing: 1px; margin-left: 6px;
+        }
+        .brand-box .by-tag span { color: var(--cyan); font-weight: 700; }
+        .full-form {
+            font-size: 0.85rem; color: #cbd5e1; letter-spacing: 0.8px; margin-top: 4px; font-weight: 400;
+        }
+        .user-pill {
+            display: flex; align-items: center; gap: 12px;
+            background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 8px 16px; border-radius: 30px;
+        }
+        .user-info { text-align: right; }
+        .user-info .name { font-size: 0.95rem; font-weight: 700; color: #fff; }
+        .user-info .role { font-size: 0.75rem; color: var(--cyan); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .btn-exit {
+            background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5; width: 34px; height: 34px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;
+        }
+        .btn-exit:hover { background: rgba(239, 68, 68, 0.3); }
+
+        /* System Safety Status Bar */
+        #safetyBanner {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 14px 20px; border-radius: 14px; margin-bottom: 22px;
+            font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        .safety-normal {
+            background: rgba(16, 185, 129, 0.12); border: 1px solid var(--emerald); color: #6ee7b7;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+        }
+        .safety-alert {
+            background: rgba(239, 68, 68, 0.25); border: 1px solid var(--red); color: #fecaca;
+            animation: pulse 1s infinite alternate; box-shadow: 0 0 25px rgba(239, 68, 68, 0.3);
+        }
+        @keyframes pulse { from { opacity: 0.7; transform: scale(0.995); } to { opacity: 1; transform: scale(1); } }
+
+        /* Cards & Grid Layouts */
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 22px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 22px; }
+        
+        .card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 18px; padding: 22px; backdrop-filter: blur(12px);
+            position: relative; overflow: hidden; transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-2px); }
+        .card h4 { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 600; }
+        .card .val { font-size: 2.3rem; font-weight: 900; font-family: 'JetBrains Mono', monospace; }
+
+        /* Appliance Status Badge */
+        .pill-badge {
+            display: inline-block; padding: 6px 16px; border-radius: 20px;
+            font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .pill-active {
+            background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid var(--emerald);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+        }
+        .pill-standby {
+            background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid #475569;
+        }
+
+        /* Interactive Judge Control Box */
+        .demo-ctrl-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(10, 16, 30, 0.95));
+            border: 1px solid var(--cyan); border-radius: 20px; padding: 24px; margin-bottom: 24px;
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.12);
+        }
+        .demo-ctrl-header {
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+            margin-bottom: 16px;
+        }
+        .demo-ctrl-header h3 { font-size: 1.15rem; color: #fff; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .lock-indicator {
+            font-size: 0.8rem; font-weight: 700; font-family: 'JetBrains Mono', monospace;
+            padding: 5px 12px; border-radius: 20px; text-transform: uppercase;
+        }
+        .lock-engaged { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--red); color: #fca5a5; }
+        .lock-unlocked { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--emerald); color: #6ee7b7; animation: pulse 1.2s infinite; }
+
+        .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+        .btn-action {
+            padding: 15px; border: none; border-radius: 12px; font-weight: 800; font-size: 0.9rem;
+            cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-action:disabled {
+            opacity: 0.35; cursor: not-allowed; filter: grayscale(80%);
+        }
+        .btn-action:not(:disabled):hover { transform: translateY(-2px); }
+        .btn-action:not(:disabled):active { transform: scale(0.97); }
+
+        .btn-act-on { background: var(--emerald); color: #022c22; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+        .btn-act-off { background: var(--red); color: #450a0a; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+        .btn-act-auto { background: var(--cyan); color: #082f49; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3); }
+        .btn-act-rst { background: var(--amber); color: #451a03; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); }
+
+        /* Team Showcase */
+        .team-box {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 20px; padding: 26px; margin-top: 26px;
+        }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 10px; }
+        .member-card {
+            background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .dept-tag {
+            font-size: 0.75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace;
+            padding: 2px 8px; border-radius: 6px; background: #1e293b; color: var(--cyan);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header Branding -->
+    <header>
+        <div class="brand-box">
+            <div>
+                <h1>NEXUS-E</h1>
+                <span class="by-tag">by <span>SPARKS TECHNO</span></span>
+            </div>
+            <div class="full-form">
+                Next-Generation Energy Optimization System
+            </div>
+        </div>
+
+        <div class="user-pill">
+            <div class="user-info">
+                <div class="name" id="dispUserName">Guest Observer</div>
+                <div class="role" id="dispUserRole">Live Demo Session</div>
+            </div>
+            <button class="btn-exit" onclick="exitDemo()" title="Exit Demo"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+        </div>
+    </header>
+
+    <!-- Safety & Fire Banner -->
+    <div id="safetyBanner" class="safety-normal">
+        <i class="fa-solid fa-shield-halved"></i> 
+        <span id="safetyStatusText">ALL SYSTEMS NORMAL: GRID IS FULLY SECURED</span>
+    </div>
+
+    <!-- Live Telemetry Matrix -->
+    <div class="grid-4">
+        <div class="card">
+            <h4>Live Room Occupancy</h4>
+            <div class="val" id="dispCount" style="color: var(--cyan);">0</div>
+            <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">Sequential IR + Vision Tracking</div>
+        </div>
+        <div class="card">
+            <h4>AC Line Current</h4>
+            <div class="val" id="dispCurrent" style="color: var(--emerald);">0.00 <span style="font-size:1.1rem;color:#64748b">A</span></div>
+            <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">Grid Voltage: <span id="dispVoltage" style="color:#cbd5e1">230</span> V</div>
+        </div>
+        <div class="card">
+            <h4>Active Load Power</h4>
+            <div class="val" id="dispPower" style="color: var(--amber);">0.00 <span style="font-size:1.1rem;color:#64748b">W</span></div>
+            <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">ACS712 RMS True-Power</div>
+        </div>
+        <div class="card">
+            <h4>Appliance Status</h4>
+            <div style="margin-top: 8px;">
+                <span id="dispAppliances" class="pill-badge pill-standby">STANDBY / OFF</span>
+            </div>
+            <div style="font-size: 0.8rem; color: #64748b; margin-top: 14px;">Master Circuit: <b id="dispBreaker" style="color:var(--emerald)">ARMED</b></div>
+        </div>
+    </div>
+
+    <!-- ROI & Sustainability Impact -->
+    <div class="grid-2">
+        <div class="card" style="border-left: 4px solid var(--cyan);">
+            <h4>Total Energy Conserved</h4>
+            <div class="val" id="dispEnergy" style="color: var(--cyan);">0.000 <span style="font-size:1.1rem;color:#64748b">kWh</span></div>
+            <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 6px;">Idle classroom load eliminated automatically</div>
+        </div>
+        <div class="card" style="border-left: 4px solid var(--emerald);">
+            <h4>Financial Savings Accrued</h4>
+            <div class="val" id="dispMoney" style="color: var(--emerald);">&#8377; 0.00</div>
+            <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 6px;">Based on standard institutional tariff (&#8377; 8.00 / unit)</div>
+        </div>
+    </div>
+
+    <!-- Interactive Judges Demonstration Deck -->
+    <div class="demo-ctrl-card">
+        <div class="demo-ctrl-header">
+            <h3><i class="fa-solid fa-sliders"></i> Interactive Edge Actuation Deck</h3>
+            <div id="lockBadge" class="lock-indicator lock-engaged"><i class="fa-solid fa-lock"></i> Observer Mode (Admin Controlled)</div>
+        </div>
+        <p id="lockHelpText" style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 16px;">
+            Sparks Admin jab control unlock karenge, tab aap yahan se direct classroom hardware switches test kar payenge.
+        </p>
+        <div class="controls-grid">
+            <button class="btn-action btn-act-on" id="btnOn" onclick="sendViewerCmd('FORCE_ON')" disabled><i class="fa-solid fa-bolt"></i> Force All ON</button>
+            <button class="btn-action btn-act-off" id="btnOff" onclick="sendViewerCmd('FORCE_OFF')" disabled><i class="fa-solid fa-power-off"></i> Force All OFF</button>
+            <button class="btn-action btn-act-auto" id="btnAuto" onclick="sendViewerCmd('AUTO')" disabled><i class="fa-solid fa-robot"></i> Resume Auto</button>
+            <button class="btn-action btn-act-rst" id="btnReset" onclick="sendViewerCmd('RESET_BREAKER')" disabled><i class="fa-solid fa-rotate-left"></i> Reset Breaker</button>
+        </div>
+    </div>
+
+    <!-- Sparks Team Showcase & Project Profile -->
+    <div class="team-box">
+        <h3 style="color: #fff; margin-bottom: 8px;">Nexus-E Engineering Innovation</h3>
+        <p style="font-size: 0.9rem; color: #cbd5e1; line-height: 1.6; margin-bottom: 18px;">
+            <b>Project Concept:</b> An automated edge infrastructure eliminating idle electrical consumption using sequential doorway gating, OpenCV computer vision validation, and emergency circuit isolation.<br>
+            <b>प्रोजेक्ट सार:</b> कक्षाओं में बिजली की बर्बादी रोकने के लिए आईआर सेंसर और कंप्यूटर विज़न तकनीक का एक स्मार्ट समाधान, जो इमरजेंसी में ऑटोमैटिक पावर कट-ऑफ प्रदान करता है।
+        </p>
+
+        <h5 style="color: var(--cyan); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; margin-bottom: 8px;">Core Engineering Team</h5>
+        <div class="team-grid">
+            <div class="member-card"><b>Priyadarshan</b> <span class="dept-tag">ECE</span></div>
+            <div class="member-card"><b>Sahil</b> <span class="dept-tag">EE</span></div>
+            <div class="member-card"><b>Shaksham</b> <span class="dept-tag">ECE</span></div>
+            <div class="member-card"><b>Kriti</b> <span class="dept-tag">ECE</span></div>
+            <div class="member-card"><b>Rupali</b> <span class="dept-tag">ECE</span></div>
+        </div>
+
+        <h5 style="color: #94a3b8; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; margin: 18px 0 8px;">Supporting Engineering Members</h5>
+        <div class="team-grid">
+            <div class="member-card"><b>Abhishek Patel</b> <span class="dept-tag">ECE</span></div>
+            <div class="member-card"><b>Abhishek Dubey</b> <span class="dept-tag">EE</span></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Personalize with Session Data
+    const vName = sessionStorage.getItem("nexusViewerName") || "Guest Observer";
+    const vRole = sessionStorage.getItem("nexusViewerRole") || "Visitor";
+    document.getElementById("dispUserName").innerText = vName;
+    document.getElementById("dispUserRole").innerText = vRole.toUpperCase() + " ACCESS";
+
+    // Firebase Config
+    const firebaseConfig = {
+        apiKey: "AIzaSyDgM4LrgOXnG8c7dDs6hgHbhJ7cSTo7dao",
+        authDomain: "nexus-e-fd787.firebaseapp.com",
+        databaseURL: "https://nexus-e-fd787-default-rtdb.firebaseio.com",
+        projectId: "nexus-e-fd787",
+        storageBucket: "nexus-e-fd787.firebasestorage.app",
+        messagingSenderId: "850097280209",
+        appId: "1:850097280209:web:eb708b0804d75486fae1f0",
+        measurementId: "G-MVWZ3YFC3J"
+    };
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // 1. Listen to Telemetry (/classroom/telemetry)
+    db.ref("classroom/telemetry").on("value", snapshot => {
+        const data = snapshot.val();
+        if (!data) return;
+
+        document.getElementById("dispCount").innerText = data.headCount !== undefined ? data.headCount : 0;
+        document.getElementById("dispCurrent").innerHTML = `${(data.currentRMS || 0).toFixed(2)} <span style="font-size:1.1rem;color:#64748b">A</span>`;
+        document.getElementById("dispVoltage").innerText = data.voltage || 230;
+        document.getElementById("dispPower").innerHTML = `${(data.powerWatts || 0).toFixed(2)} <span style="font-size:1.1rem;color:#64748b">W</span>`;
+        document.getElementById("dispEnergy").innerHTML = `${(data.energySavedKWh || 0).toFixed(3)} <span style="font-size:1.1rem;color:#64748b">kWh</span>`;
+        document.getElementById("dispMoney").innerText = `₹ ${(data.moneySavedINR || 0).toFixed(2)}`;
+
+        // Appliance Active/Standby Indicator
+        const pill = document.getElementById("dispAppliances");
+        if (data.appliancesOn) {
+            pill.className = "pill-badge pill-active";
+            pill.innerText = "ACTIVE (LOAD ENGAGED)";
+        } else {
+            pill.className = "pill-badge pill-standby";
+            pill.innerText = "STANDBY / OFF";
+        }
+
+        // Safety Status & Master Breaker
+        const banner = document.getElementById("safetyBanner");
+        const statusText = document.getElementById("safetyStatusText");
+        const breaker = document.getElementById("dispBreaker");
+        const alertMsg = data.alertStatus || "Normal";
+
+        if (alertMsg.includes("FIRE") || alertMsg.includes("SMOKE") || alertMsg.includes("SHORT CIRCUIT") || alertMsg.includes("CRITICAL")) {
+            banner.className = "safety-alert";
+            statusText.innerText = "CRITICAL ALERT: " + alertMsg;
+            breaker.innerText = "TRIPPED";
+            breaker.style.color = "var(--red)";
+        } else {
+            banner.className = "safety-normal";
+            statusText.innerText = "ALL SYSTEMS NORMAL: GRID IS FULLY SECURED";
+            breaker.innerText = "ARMED";
+            breaker.style.color = "var(--emerald)";
+        }
+    });
+
+    // 2. Listen to Admin Delegation Toggle (/settings/viewerControlAllowed)
+    db.ref("settings/viewerControlAllowed").on("value", snapshot => {
+        const isAllowed = (snapshot.val() === true);
+        const lockBadge = document.getElementById("lockBadge");
+        const lockHelp = document.getElementById("lockHelpText");
+        const btns = [document.getElementById("btnOn"), document.getElementById("btnOff"), document.getElementById("btnAuto"), document.getElementById("btnReset")];
+
+        if (isAllowed) {
+            lockBadge.className = "lock-indicator lock-unlocked";
+            lockBadge.innerHTML = "<i class='fa-solid fa-unlock'></i> Live Interactive Control Active";
+            lockHelp.innerText = "Sparks Admin has granted interactive control. Aap live switches press karke hardware test kar sakte hain!";
+            btns.forEach(b => b.disabled = false);
+        } else {
+            lockBadge.className = "lock-indicator lock-engaged";
+            lockBadge.innerHTML = "<i class='fa-solid fa-lock'></i> Observer Mode (Admin Locked)";
+            lockHelp.innerText = "Sparks Admin jab control unlock karenge, tab aap yahan se direct classroom hardware switches test kar payenge.";
+            btns.forEach(b => b.disabled = true);
+        }
+    });
+
+    // Dispatch Command from Viewer deck (only works when unlocked)
+    function sendViewerCmd(cmd) {
+        db.ref("classroom/control/manualCommand").set(cmd);
+    }
+
+    function exitDemo() {
+        sessionStorage.clear();
+        window.location.href = "index.html";
+    }
+</script>
+</body>
+</html>
