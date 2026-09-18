@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sparks Central Console | Nexus-E</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <style>
+        :root {
+            --bg-base: #070b14;
+            --card-bg: rgba(15, 23, 42, 0.8);
+            --border: rgba(56, 189, 248, 0.2);
+            --cyan: #38bdf8;
+            --emerald: #10b981;
+            --red: #ef4444;
+            --amber: #f59e0b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle at 50% 0%, #0f1d38 0%, var(--bg-base) 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 24px; background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 16px; backdrop-filter: blur(12px); margin-bottom: 20px;
+        }
+        .brand { font-size: 1.5rem; font-weight: 900; letter-spacing: 1px; color: var(--cyan); }
+        .brand span { color: #94a3b8; font-size: 0.85rem; font-weight: 400; margin-left: 8px; }
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer;
+        }
+
+        /* Safety Banner with Flashing Alert */
+        #alert-banner {
+            padding: 14px 20px; border-radius: 12px; margin-bottom: 20px;
+            font-weight: 700; font-family: 'JetBrains Mono', monospace; text-align: center;
+            transition: all 0.3s;
+        }
+        .banner-normal {
+            background: rgba(16, 185, 129, 0.15); border: 1px solid var(--emerald); color: #6ee7b7;
+        }
+        .banner-critical {
+            background: rgba(239, 68, 68, 0.25); border: 1px solid var(--red); color: #fecaca;
+            animation: pulse 1s infinite alternate;
+        }
+        @keyframes pulse { from { opacity: 0.6; transform: scale(0.99); } to { opacity: 1; transform: scale(1); } }
+
+        /* Grid Layouts */
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        
+        .card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 16px; padding: 20px; backdrop-filter: blur(10px);
+        }
+        .card h4 { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .card .val { font-size: 2.2rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+
+        /* Appliance Status Pill */
+        .pill-badge {
+            display: inline-block; padding: 6px 14px; border-radius: 20px;
+            font-size: 0.85rem; font-weight: 700; text-transform: uppercase;
+        }
+        .pill-active { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid var(--emerald); }
+        .pill-standby { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 1px solid #64748b; }
+
+        /* Controls Grid */
+        .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 12px; }
+        .btn-ctrl {
+            padding: 15px; border: none; border-radius: 12px; font-weight: 700; font-size: 0.9rem;
+            cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: transform 0.1s;
+        }
+        .btn-ctrl:active { transform: scale(0.97); }
+        .btn-force-on { background: var(--emerald); color: #022c22; }
+        .btn-force-off { background: var(--red); color: #450a0a; }
+        .btn-auto { background: var(--cyan); color: #082f49; }
+        .btn-reset { background: var(--amber); color: #451a03; }
+
+        /* Switch Toggle */
+        .judge-toggle-card {
+            display: flex; justify-content: space-between; align-items: center;
+            background: linear-gradient(90deg, rgba(56, 189, 248, 0.08), rgba(16, 185, 129, 0.08));
+            border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 16px; padding: 18px; margin-bottom: 20px;
+        }
+        .switch { position: relative; display: inline-block; width: 52px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #334155; border-radius: 34px; transition: .3s;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px;
+            background-color: white; border-radius: 50%; transition: .3s;
+        }
+        input:checked + .slider { background-color: var(--emerald); }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        /* Admin Add Input */
+        .admin-form { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+        .admin-form input {
+            flex: 1; min-width: 220px; padding: 10px 14px; background: #0b1120;
+            border: 1px solid var(--border); border-radius: 8px; color: #fff;
+        }
+        .btn-add {
+            padding: 10px 20px; background: #3b82f6; color: white; border: none;
+            border-radius: 8px; font-weight: 700; cursor: pointer;
+        }
+
+        /* Team Showcase */
+        .team-section {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 20px; padding: 24px; margin-top: 24px;
+        }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 10px; }
+        .member-pill {
+            background: rgba(11, 17, 32, 0.8); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .dept-tag {
+            font-size: 0.75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace;
+            padding: 2px 6px; border-radius: 4px; background: #1e293b; color: var(--cyan);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="brand">NEXUS-E <span>// Autonomous Control Room</span></div>
+        <button class="btn-logout" onclick="logout()">Secure Exit</button>
+    </header>
+
+    <!-- Real-time Safety Status Banner -->
+    <div id="alert-banner" class="banner-normal">ALL SYSTEMS NORMAL: GRID SECURED</div>
+
+    <!-- Row 1: Executive Telemetry -->
+    <div class="grid-4">
+        <div class="card">
+            <h4>Live Occupancy</h4>
+            <div class="val" id="disp-count" style="color: var(--cyan);">0</div>
+            <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">Sequential IR + Vision AI</div>
+        </div>
+        <div class="card">
+            <h4>AC Line Current</h4>
+            <div class="val" id="disp-current" style="color: var(--emerald);">0.00 <span style="font-size:1.1rem;color:#64748b">A</span></div>
+            <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">Grid Voltage: <span id="disp-voltage" style="color:#cbd5e1">230</span> V</div>
+        </div>
+        <div class="card">
+            <h4>Active Load Power</h4>
+            <div class="val" id="disp-power" style="color: var(--amber);">0.00 <span style="font-size:1.1rem;color:#64748b">W</span></div>
+            <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">ACS712 RMS True-Power</div>
+        </div>
+        <div class="card">
+            <h4>Appliance Grid Status</h4>
+            <div style="margin-top: 8px;">
+                <span id="disp-appliances" class="pill-badge pill-standby">STANDBY / OFF</span>
+            </div>
+            <div style="font-size: 0.8rem; color: #64748b; margin-top: 14px;">Master Relay: <b id="disp-breaker" style="color:var(--emerald)">ARMED</b></div>
+        </div>
+    </div>
+
+    <!-- Row 2: Sustainability & ROI Financial Metrics -->
+    <div class="grid-2">
+        <div class="card" style="border-left: 4px solid var(--cyan);">
+            <h4>Total Energy Conserved (Automated Cutoff)</h4>
+            <div class="val" id="disp-energy" style="color: var(--cyan);">0.000 <span style="font-size:1.1rem;color:#64748b">kWh</span></div>
+            <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 6px;">Idle load eradication verified</div>
+        </div>
+        <div class="card" style="border-left: 4px solid var(--emerald);">
+            <h4>Financial Savings (Institutional Tariff)</h4>
+            <div class="val" id="disp-money" style="color: var(--emerald);">&#8377; 0.00</div>
+            <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 6px;">Based on &#8377; 8.00 / commercial kWh unit</div>
+        </div>
+    </div>
+
+    <!-- Central Control Override -->
+    <div class="card" style="margin-bottom: 20px;">
+        <h4 style="color: var(--cyan); margin-bottom: 4px;">Central Staff Override Matrix</h4>
+        <p style="font-size: 0.85rem; color: #94a3b8;">Manual commands write directly to edge ESP32 via Firebase</p>
+        <div class="controls-grid">
+            <button class="btn-ctrl btn-force-on" onclick="sendCmd('FORCE_ON')">Force All ON</button>
+            <button class="btn-ctrl btn-force-off" onclick="sendCmd('FORCE_OFF')">Force All OFF</button>
+            <button class="btn-ctrl btn-auto" onclick="sendCmd('AUTO')">Resume Auto (IR/AI)</button>
+            <button class="btn-ctrl btn-reset" onclick="sendCmd('RESET_BREAKER')">Reset Breaker</button>
+        </div>
+    </div>
+
+    <!-- Judges / Viewers Delegation Switch -->
+    <div class="judge-toggle-card">
+        <div>
+            <h3 style="color: var(--cyan); font-size: 1.05rem;">Judges & Viewers Control Delegation</h3>
+            <p style="font-size: 0.85rem; color: #94a3b8;">Presentation ke dauran audience ya judges ke panels ke action buttons allow karein</p>
+        </div>
+        <label class="switch">
+            <input type="checkbox" id="viewerAccessToggle" onchange="toggleViewerAccess(this.checked)">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <!-- Admin Registration -->
+    <div class="card" style="margin-bottom: 24px;">
+        <h4 style="color: var(--cyan);">System Administrator Management</h4>
+        <div class="admin-form">
+            <input type="email" id="newAdminEmail" placeholder="admin@sparkstechno.edu">
+            <input type="password" id="newAdminPass" placeholder="Admin Password (min 6 char)">
+            <button class="btn-add" onclick="addNewAdmin()">Add New Admin</button>
+        </div>
+        <p id="adminStatusMsg" style="margin-top: 8px; font-size: 0.85rem;"></p>
+    </div>
+
+    <!-- Team Sparks Credits -->
+    <div class="team-section">
+        <h3 style="color: #fff; margin-bottom: 8px;">Nexus-E: Autonomous Classroom Energy Core</h3>
+        <p style="font-size: 0.9rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 16px;">
+            <b>Project Concept:</b> An automated edge infrastructure eliminating idle electrical consumption using sequential doorway gating, OpenCV computer vision validation, and emergency circuit isolation.
+        </p>
+        <h5 style="color: var(--cyan); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; margin-bottom: 8px;">Core Engineering Team</h5>
+        <div class="team-grid">
+            <div class="member-pill"><b>Priyadarshan</b> <span class="dept-tag">ECE</span></div>
+            <div class="member-pill"><b>Sahil</b> <span class="dept-tag">EE</span></div>
+            <div class="member-pill"><b>Shaksham</b> <span class="dept-tag">ECE</span></div>
+            <div class="member-pill"><b>Kriti</b> <span class="dept-tag">ECE</span></div>
+            <div class="member-pill"><b>Rupali</b> <span class="dept-tag">ECE</span></div>
+        </div>
+        <h5 style="color: #94a3b8; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; margin: 16px 0 8px;">Supporting Engineering Members</h5>
+        <div class="team-grid">
+            <div class="member-pill"><b>Abhishek Patel</b> <span class="dept-tag">ECE</span></div>
+            <div class="member-pill"><b>Abhishek Dubey</b> <span class="dept-tag">EE</span></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDgM4LrgOXnG8c7dDs6hgHbhJ7cSTo7dao",
+        authDomain: "nexus-e-fd787.firebaseapp.com",
+        databaseURL: "https://nexus-e-fd787-default-rtdb.firebaseio.com",
+        projectId: "nexus-e-fd787",
+        storageBucket: "nexus-e-fd787.firebasestorage.app",
+        messagingSenderId: "850097280209",
+        appId: "1:850097280209:web:eb708b0804d75486fae1f0",
+        measurementId: "G-MVWZ3YFC3J"
+    };
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    // Security Gate
+    auth.onAuthStateChanged(user => {
+        if (!user) window.location.href = "index.html";
+    });
+
+    // Web Audio Synthesizer for Alert Siren (No audio files required)
+    let audioCtx = null;
+    function playSiren() {
+        try {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.5);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.5);
+        } catch(e) {}
+    }
+
+    // Sahil Schema: Listen to /classroom/telemetry
+    db.ref("classroom/telemetry").on("value", snapshot => {
+        const data = snapshot.val();
+        if (!data) return;
+
+        document.getElementById("disp-count").innerText = data.headCount !== undefined ? data.headCount : 0;
+        document.getElementById("disp-current").innerHTML = `${(data.currentRMS || 0).toFixed(2)} <span style="font-size:1.1rem;color:#64748b">A</span>`;
+        document.getElementById("disp-voltage").innerText = data.voltage || 230;
+        document.getElementById("disp-power").innerHTML = `${(data.powerWatts || 0).toFixed(2)} <span style="font-size:1.1rem;color:#64748b">W</span>`;
+        document.getElementById("disp-energy").innerHTML = `${(data.energySavedKWh || 0).toFixed(3)} <span style="font-size:1.1rem;color:#64748b">kWh</span>`;
+        document.getElementById("disp-money").innerText = `₹ ${(data.moneySavedINR || 0).toFixed(2)}`;
+
+        // Appliance Active/Standby Pill
+        const appPill = document.getElementById("disp-appliances");
+        if (data.appliancesOn) {
+            appPill.className = "pill-badge pill-active";
+            appPill.innerText = "ACTIVE (LOAD ENGAGED)";
+        } else {
+            appPill.className = "pill-badge pill-standby";
+            appPill.innerText = "STANDBY / OFF";
+        }
+
+        // Safety Status & Master Trip Handling
+        const banner = document.getElementById("alert-banner");
+        const breaker = document.getElementById("disp-breaker");
+        const alertMsg = data.alertStatus || "Normal";
+
+        if (alertMsg.includes("FIRE") || alertMsg.includes("SMOKE") || alertMsg.includes("SHORT CIRCUIT") || alertMsg.includes("CRITICAL")) {
+            banner.className = "banner-critical";
+            banner.innerText = "CRITICAL ALERT: " + alertMsg;
+            breaker.innerText = "TRIPPED";
+            breaker.style.color = "var(--red)";
+            playSiren();
+        } else {
+            banner.className = "banner-normal";
+            banner.innerText = "ALL SYSTEMS NORMAL: GRID SECURED";
+            breaker.innerText = "ARMED";
+            breaker.style.color = "var(--emerald)";
+        }
+    });
+
+    // Sync Viewer Control Delegation State
+    db.ref("settings/viewerControlAllowed").on("value", snap => {
+        document.getElementById("viewerAccessToggle").checked = (snap.val() === true);
+    });
+
+    // Sahil Schema: Write directly to /classroom/control/manualCommand
+    function sendCmd(cmd) {
+        db.ref("classroom/control/manualCommand").set(cmd).then(() => {
+            console.log("Command dispatched:", cmd);
+        });
+    }
+
+    function toggleViewerAccess(allowed) {
+        db.ref("settings/viewerControlAllowed").set(allowed);
+    }
+
+    function addNewAdmin() {
+        const email = document.getElementById("newAdminEmail").value.trim();
+        const pass = document.getElementById("newAdminPass").value.trim();
+        const msg = document.getElementById("adminStatusMsg");
+
+        if (!email || pass.length < 6) {
+            msg.style.color = "var(--amber)";
+            msg.innerText = "Minimum 6 characters password aur valid email enter karein.";
+            return;
+        }
+
+        const secApp = firebase.initializeApp(firebaseConfig, "AdminCreatorApp");
+        secApp.auth().createUserWithEmailAndPassword(email, pass)
+            .then(() => {
+                msg.style.color = "var(--emerald)";
+                msg.innerText = `New admin (${email}) successfully added!`;
+                document.getElementById("newAdminEmail").value = "";
+                document.getElementById("newAdminPass").value = "";
+                secApp.delete();
+            })
+            .catch(err => {
+                msg.style.color = "var(--red)";
+                msg.innerText = err.message;
+                secApp.delete();
+            });
+    }
+
+    function logout() {
+        auth.signOut().then(() => {
+            window.location.href = "index.html";
+        });
+    }
+</script>
+</body>
+</html>
