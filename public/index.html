@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus-E | Sparks Techno</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --neon-cyan: #06b6d4;
+            --neon-blue: #3b82f6;
+            --glass-bg: rgba(15, 23, 42, 0.7);
+            --glass-border: rgba(6, 182, 212, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; transition: all 0.3s ease; }
+        
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% -20%, #1e3a8a, var(--bg-dark) 60%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Tech/Circuit Background Accents */
+        .grid-bg {
+            position: absolute;
+            width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+        }
+
+        .login-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.15), inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+        }
+        .header p { 
+            color: #94a3b8; 
+            font-size: 0.9rem; 
+            letter-spacing: 1px; 
+            margin-top: 5px; 
+            font-weight: 400;
+        }
+
+        /* Tabs */
+        .tab-box {
+            display: flex;
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            margin-bottom: 25px;
+            padding: 5px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+        .tab-btn.active {
+            background: rgba(6, 182, 212, 0.2);
+            color: var(--neon-cyan);
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Forms */
+        .form-section { display: none; animation: fadeIn 0.4s ease; }
+        .form-section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .input-group { position: relative; margin-bottom: 20px; }
+        .input-group i {
+            position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+            color: var(--neon-cyan); font-size: 1rem;
+        }
+        input, select {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #334155;
+            border-radius: 10px;
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        input:focus, select:focus { border-color: var(--neon-cyan); box-shadow: 0 0 10px rgba(6, 182, 212, 0.2); }
+        
+        select option { background: var(--bg-dark); color: white; }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-viewer {
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+            color: white;
+            box-shadow: 0 5px 15px rgba(6, 182, 212, 0.3);
+        }
+        .btn-viewer:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(6, 182, 212, 0.5); }
+
+        .btn-admin {
+            background: transparent;
+            border: 1px dashed #ef4444;
+            color: #ef4444;
+        }
+        .btn-admin:hover { background: rgba(239, 68, 68, 0.1); border-style: solid; box-shadow: 0 5px 15px rgba(239, 68, 68, 0.2); }
+
+        .footer-badge {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.75rem;
+            color: #64748b;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grid-bg"></div>
+
+    <div class="login-container">
+        <div class="header">
+            <h1>NEXUS-E</h1>
+            <p>Next-Generation Energy Optimization System</p>
+        </div>
+
+        <div class="tab-box">
+            <div class="tab-btn active" onclick="switchTab('viewer')">Live Demo (Viewer)</div>
+            <div class="tab-btn" onclick="switchTab('admin')"><i class="fa-solid fa-lock"></i> Sparks Admin</div>
+        </div>
+
+        <!-- Viewer Form -->
+        <div id="viewerForm" class="form-section active">
+            <div class="input-group">
+                <i class="fa-solid fa-user"></i>
+                <input type="text" id="vName" placeholder="Enter Full Name">
+            </div>
+            
+            <div class="input-group">
+                <i class="fa-solid fa-id-badge"></i>
+                <select id="vRole">
+                    <option value="" disabled selected>Select Your Role</option>
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="judge">Guest / Judge</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <i class="fa-solid fa-hashtag"></i>
+                <input type="text" id="vId" placeholder="User ID (e.g. Roll No or Emp ID)">
+            </div>
+
+            <button class="btn-submit btn-viewer" onclick="loginViewer()">Start Live Demo <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+
+        <!-- Admin Form -->
+        <div id="adminForm" class="form-section">
+            <div class="input-group">
+                <i class="fa-solid fa-envelope"></i>
+                <input type="email" id="aEmail" placeholder="Admin Email">
+            </div>
+
+            <div class="input-group">
+                <i class="fa-solid fa-key"></i>
+                <input type="password" id="aPass" placeholder="Security Password">
+            </div>
+
+            <button class="btn-submit btn-admin" onclick="loginAdmin()">System Override <i class="fa-solid fa-power-off"></i></button>
+        </div>
+
+        <div class="footer-badge">GEC BHOJPUR | SPARKS TECHNO | TECH FEST</div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.form-section').forEach(form => form.classList.remove('active'));
+            
+            if(tab === 'viewer') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('viewerForm').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('adminForm').classList.add('active');
+            }
+        }
+
+        function loginViewer() {
+            const name = document.getElementById('vName').value;
+            const role = document.getElementById('vRole').value;
+            const id = document.getElementById('vId').value;
+            
+            if(!name || !role || !id) return alert("Please fill all viewer details!");
+            
+            const generatedEmail = `${id.toLowerCase().replace(/\s/g, '')}@nexuse.com`;
+            console.log("Creating/Logging in with Firebase Email:", generatedEmail);
+            alert(`Welcome ${name}! Proceeding to Viewer Dashboard...`);
+        }
+
+        function loginAdmin() {
+            const email = document.getElementById('aEmail').value;
+            const pass = document.getElementById('aPass').value;
+
+            if(!email || !pass) return alert("Credentials required!");
+            
+            console.log("Authenticating Admin:", email);
+            alert("Admin Access Granted. Loading Console...");
+        }
+    </script>
+</body>
+</html>
