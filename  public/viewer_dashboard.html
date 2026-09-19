@@ -4,11 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus-E | Live Terminal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Fonts: Outfit, JetBrains Mono & Poster Fonts (Montserrat + Dancing Script) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=JetBrains+Mono:wght@400;700&family=Montserrat:ital,wght@0,800;0,900;1,900&family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    
     <style>
         :root {
             --bg-base: #050811;
@@ -33,26 +39,72 @@
         }
         .container { max-width: 1150px; margin: 0 auto; }
 
-        /* Top Header Navigation */
+        /* Top Header Navigation & Poster Brand Logo */
         header {
             display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
-            padding: 20px 26px; background: var(--card-bg); border: 1px solid var(--border);
+            padding: 18px 24px; background: var(--card-bg); border: 1px solid var(--border);
             border-radius: 20px; backdrop-filter: blur(16px); margin-bottom: 22px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(6, 182, 212, 0.05);
         }
-        .brand-box h1 {
-            font-size: 2.2rem; font-weight: 900; letter-spacing: 1.5px;
-            background: linear-gradient(135deg, #ffffff 40%, var(--cyan) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        .poster-brand-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            user-select: none;
+        }
+        .brand-title-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .speed-bar {
             display: inline-block;
+            width: 22px;
+            height: 7px;
+            border-top: 2.5px solid #38bdf8;
+            border-bottom: 2.5px solid #38bdf8;
+            border-radius: 1.5px;
+            opacity: 0.9;
         }
-        .brand-box .by-tag {
-            font-size: 0.95rem; font-weight: 600; color: #94a3b8; letter-spacing: 1px; margin-left: 6px;
+        .brand-logo-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
         }
-        .brand-box .by-tag span { color: var(--cyan); font-weight: 700; }
-        .full-form {
-            font-size: 0.85rem; color: #cbd5e1; letter-spacing: 0.8px; margin-top: 4px; font-weight: 400;
+        .nexus-bold { color: #ffffff; font-family: 'Montserrat', sans-serif; }
+        .dash-e-italic { color: #38bdf8; font-family: 'Montserrat', sans-serif; font-style: italic; padding-left: 2px; }
+        
+        .by-sparks-line {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
         }
+        .script-by {
+            font-family: 'Dancing Script', cursive;
+            color: #38bdf8;
+            font-size: 1.15rem;
+            font-weight: 700;
+            transform: rotate(-3deg);
+        }
+        .sparks-techno {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 0.82rem;
+            letter-spacing: 2.5px;
+            color: #cbd5e1;
+            text-transform: uppercase;
+        }
+        .script-tagline-nav {
+            font-family: 'Dancing Script', cursive;
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-left: 6px;
+        }
+
         .user-pill {
             display: flex; align-items: center; gap: 12px;
             background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08);
@@ -66,7 +118,7 @@
             color: #fca5a5; width: 34px; height: 34px; border-radius: 50%; display: flex;
             align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;
         }
-        .btn-exit:hover { background: rgba(239, 68, 68, 0.3); }
+        .btn-exit:hover { background: rgba(239, 68, 68, 0.3); color: #fff; }
 
         /* System Safety Status Bar */
         #safetyBanner {
@@ -111,7 +163,7 @@
             background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid #475569;
         }
 
-        /* Interactive Judge Control Box */
+        /* Interactive Judge Control Box (Actuation Deck) */
         .demo-ctrl-card {
             background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(10, 16, 30, 0.95));
             border: 1px solid var(--cyan); border-radius: 20px; padding: 24px; margin-bottom: 24px;
@@ -160,20 +212,30 @@
             font-size: 0.75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace;
             padding: 2px 8px; border-radius: 6px; background: #1e293b; color: var(--cyan);
         }
+
+        @media (max-width: 600px) {
+            .brand-logo-text { font-size: 1.5rem; }
+            .script-tagline-nav { display: none; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Header Branding -->
+    <!-- Header Branding (Poster Style) -->
     <header>
-        <div class="brand-box">
-            <div>
-                <h1>NEXUS-E</h1>
-                <span class="by-tag">by <span>SPARKS TECHNO</span></span>
+        <div class="poster-brand-wrap">
+            <div class="brand-title-wrap">
+                <span class="speed-bar"></span>
+                <div class="brand-logo-text">
+                    <span class="nexus-bold">NEXUS</span><span class="dash-e-italic">-E</span>
+                </div>
+                <span class="speed-bar"></span>
             </div>
-            <div class="full-form">
-                Next-Generation Energy Optimization System
+            <div class="by-sparks-line">
+                <span class="script-by">by</span>
+                <span class="sparks-techno">SPARKS TECHNO</span>
+                <span class="script-tagline-nav">// Next Generation Energy Optimization</span>
             </div>
         </div>
 
@@ -275,13 +337,18 @@
 </div>
 
 <script>
-    // Personalize with Session Data
+    // 1. Session Storage se User Data Read karo
     const vName = sessionStorage.getItem("nexusViewerName") || "Guest Observer";
-    const vRole = sessionStorage.getItem("nexusViewerRole") || "Visitor";
+    const vRole = sessionStorage.getItem("nexusViewerRole") || "visitor";
+    const vRawId = sessionStorage.getItem("nexusViewerId") || ("ID_" + Math.floor(Math.random() * 8999 + 1000));
+    
     document.getElementById("dispUserName").innerText = vName;
     document.getElementById("dispUserRole").innerText = vRole.toUpperCase() + " ACCESS";
 
-    // Firebase Config
+    // Firebase database key safe string banao
+    const safeViewerKey = vRawId.replace(/[\.\#\$\[\]\/]/g, "_");
+
+    // 2. Firebase Init
     const firebaseConfig = {
         apiKey: "AIzaSyDgM4LrgOXnG8c7dDs6hgHbhJ7cSTo7dao",
         authDomain: "nexus-e-fd787.firebaseapp.com",
@@ -296,7 +363,45 @@
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // 1. Listen to Telemetry (/classroom/telemetry)
+    // 3. Viewer ko Firebase /viewers/ path par LIVE REGISTER karo
+    const myViewerRef = db.ref("viewers/" + safeViewerKey);
+    myViewerRef.set({
+        id: vRawId,
+        name: vName,
+        role: vRole,
+        controlAllowed: false, // By default locked rahega
+        joinedAt: Date.now()
+    });
+
+    // Tab ya browser close hone par automatic list se remove ho jaye
+    myViewerRef.onDisconnect().remove();
+
+    // 4. Admin ke Individual Toggle ko Real-Time Listen karo
+    myViewerRef.child("controlAllowed").on("value", snapshot => {
+        const isAllowed = (snapshot.val() === true);
+        const lockBadge = document.getElementById("lockBadge");
+        const lockHelp = document.getElementById("lockHelpText");
+        const btns = [
+            document.getElementById("btnOn"), 
+            document.getElementById("btnOff"), 
+            document.getElementById("btnAuto"), 
+            document.getElementById("btnReset")
+        ];
+
+        if (isAllowed) {
+            lockBadge.className = "lock-indicator lock-unlocked";
+            lockBadge.innerHTML = "<i class='fa-solid fa-lock-open'></i> Live Control Delegated (Active)";
+            lockHelp.innerText = "Sparks Admin has granted interactive control. Aap live switches press karke classroom hardware test kar sakte hain!";
+            btns.forEach(b => { if(b) b.disabled = false; });
+        } else {
+            lockBadge.className = "lock-indicator lock-engaged";
+            lockBadge.innerHTML = "<i class='fa-solid fa-lock'></i> Observer Mode (Admin Controlled)";
+            lockHelp.innerText = "Sparks Admin jab control unlock karenge, tab aap yahan se direct classroom hardware switches test kar payenge.";
+            btns.forEach(b => { if(b) b.disabled = true; });
+        }
+    });
+
+    // 5. Telemetry Listener (/classroom/telemetry)
     db.ref("classroom/telemetry").on("value", snapshot => {
         const data = snapshot.val();
         if (!data) return;
@@ -308,7 +413,7 @@
         document.getElementById("dispEnergy").innerHTML = `${(data.energySavedKWh || 0).toFixed(3)} <span style="font-size:1.1rem;color:#64748b">kWh</span>`;
         document.getElementById("dispMoney").innerText = `₹ ${(data.moneySavedINR || 0).toFixed(2)}`;
 
-        // Appliance Active/Standby Indicator
+        // Appliance Status
         const pill = document.getElementById("dispAppliances");
         if (data.appliancesOn) {
             pill.className = "pill-badge pill-active";
@@ -337,34 +442,19 @@
         }
     });
 
-    // 2. Listen to Admin Delegation Toggle (/settings/viewerControlAllowed)
-    db.ref("settings/viewerControlAllowed").on("value", snapshot => {
-        const isAllowed = (snapshot.val() === true);
-        const lockBadge = document.getElementById("lockBadge");
-        const lockHelp = document.getElementById("lockHelpText");
-        const btns = [document.getElementById("btnOn"), document.getElementById("btnOff"), document.getElementById("btnAuto"), document.getElementById("btnReset")];
-
-        if (isAllowed) {
-            lockBadge.className = "lock-indicator lock-unlocked";
-            lockBadge.innerHTML = "<i class='fa-solid fa-unlock'></i> Live Interactive Control Active";
-            lockHelp.innerText = "Sparks Admin has granted interactive control. Aap live switches press karke hardware test kar sakte hain!";
-            btns.forEach(b => b.disabled = false);
-        } else {
-            lockBadge.className = "lock-indicator lock-engaged";
-            lockBadge.innerHTML = "<i class='fa-solid fa-lock'></i> Observer Mode (Admin Locked)";
-            lockHelp.innerText = "Sparks Admin jab control unlock karenge, tab aap yahan se direct classroom hardware switches test kar payenge.";
-            btns.forEach(b => b.disabled = true);
-        }
-    });
-
     // Dispatch Command from Viewer deck (only works when unlocked)
     function sendViewerCmd(cmd) {
         db.ref("classroom/control/manualCommand").set(cmd);
     }
 
     function exitDemo() {
-        sessionStorage.clear();
-        window.location.href = "index.html";
+        myViewerRef.remove().then(() => {
+            sessionStorage.clear();
+            window.location.href = "index.html";
+        }).catch(() => {
+            sessionStorage.clear();
+            window.location.href = "index.html";
+        });
     }
 </script>
 </body>
