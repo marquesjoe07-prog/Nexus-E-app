@@ -13,19 +13,21 @@
     
     <style>
         :root {
+            /* Anime Glowing Wisteria Night Base */
             --bg-night: #070312;
             
-            /* Preserved Title Glow */
+            /* Preserved Glowing Accents */
             --wisteria-glow: #c084fc;
             --wisteria-neon: #a855f7;
+            --cyan-glow: #38bdf8;
             
-            /* Radiant Grey Palette */
-            --radiant-grey-light: #f1f5f9;
+            /* Radiant Metallic Grey / Silver Sheen Palette */
+            --radiant-grey-light: #f8fafc;
             --radiant-grey: #e2e8f0;
             --radiant-grey-muted: #94a3b8;
-            --radiant-grey-glow: rgba(226, 232, 240, 0.4);
+            --radiant-grey-glow: rgba(226, 232, 240, 0.45);
             
-            --glass-surface: rgba(18, 10, 36, 0.78);
+            --glass-surface: rgba(18, 10, 36, 0.82);
             --border-glow: rgba(226, 232, 240, 0.22);
         }
 
@@ -34,9 +36,9 @@
         body {
             background-color: var(--bg-night);
             background-image: 
-                radial-gradient(circle at 20% 15%, rgba(168, 85, 247, 0.16) 0%, transparent 45%),
-                radial-gradient(circle at 80% 80%, rgba(192, 132, 252, 0.12) 0%, transparent 50%),
-                radial-gradient(circle at 50% -10%, #240d52 0%, var(--bg-night) 75%);
+                radial-gradient(circle at 20% 15%, rgba(168, 85, 247, 0.18) 0%, transparent 45%),
+                radial-gradient(circle at 80% 80%, rgba(192, 132, 252, 0.14) 0%, transparent 50%),
+                radial-gradient(circle at 50% -10%, #290f5c 0%, var(--bg-night) 75%);
             color: var(--radiant-grey);
             display: flex;
             justify-content: center;
@@ -46,7 +48,7 @@
             position: relative;
         }
 
-        /* Ambient Grid */
+        /* Luminous Night Grid */
         .grid-bg {
             position: absolute;
             width: 100vw;
@@ -58,21 +60,21 @@
             z-index: -1;
         }
 
-        /* Glassmorphism Container with Radiant Silver Glow Border */
+        /* Frosted Glass Container with Silver Sheen Rim */
         .login-container {
             background: var(--glass-surface);
-            backdrop-filter: blur(22px);
+            backdrop-filter: blur(24px);
             border: 1px solid var(--border-glow);
-            border-top: 1px solid rgba(241, 245, 249, 0.5);
+            border-top: 1px solid rgba(248, 250, 252, 0.55);
             border-bottom: 1px solid rgba(148, 163, 184, 0.35);
             border-radius: 24px;
             padding: 38px 34px;
             width: 100%;
             max-width: 460px;
             box-shadow: 
-                0 20px 50px rgba(0, 0, 0, 0.75),
-                0 0 35px rgba(226, 232, 240, 0.08),
-                inset 0 0 25px rgba(0, 0, 0, 0.55);
+                0 22px 55px rgba(0, 0, 0, 0.8),
+                0 0 35px rgba(168, 85, 247, 0.16),
+                inset 0 0 25px rgba(0, 0, 0, 0.6);
             position: relative;
         }
 
@@ -89,56 +91,91 @@
             filter: blur(1px);
         }
 
-        /* ===== BRAND HEADER ===== */
+        /* ===== POSTER STYLE BRAND HEADER ===== */
         .poster-header {
             text-align: center;
             margin-bottom: 24px;
             user-select: none;
         }
 
+        /* Interactive Brand Wrapper */
         .brand-title-wrap {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 14px;
+            cursor: pointer;
         }
 
-        /* Glowing Speed Bars (Preserved) */
+        /* Dynamic Energy Speed Bars */
         .speed-bar {
             display: inline-block;
-            width: 28px;
+            width: 30px;
             height: 9px;
-            border-top: 3px solid var(--wisteria-glow);
+            border-top: 3px solid var(--cyan-glow);
             border-bottom: 3px solid var(--wisteria-glow);
             border-radius: 2px;
             opacity: 0.95;
-            box-shadow: 0 0 12px rgba(192, 132, 252, 0.6);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+            animation: barPulse 3.5s ease-in-out infinite alternate;
         }
 
-        /* PRESERVED MAIN TITLE */
+        @keyframes barPulse {
+            0% { filter: hue-rotate(0deg) drop-shadow(0 0 4px var(--cyan-glow)); }
+            100% { filter: hue-rotate(180deg) drop-shadow(0 0 10px var(--wisteria-glow)); }
+        }
+
+        /* Interactive Glowing NEXUS-E Title */
         .brand-logo-text {
             font-family: 'Montserrat', sans-serif;
-            font-size: 2.75rem;
+            font-size: 2.85rem;
             font-weight: 900;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             margin: 0;
             line-height: 1;
+            position: relative;
+            transition: transform 0.3s ease, filter 0.3s ease;
         }
 
-        .nexus-grad {
+        .brand-title-wrap:hover .brand-logo-text {
+            transform: scale(1.04);
+            filter: drop-shadow(0 0 25px rgba(56, 189, 248, 0.75));
+        }
+
+        /* NEXUS: Infinite Fluid Chroma Gradient */
+        .nexus-holo {
             font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #ffffff 45%, #e9d5ff 100%);
+            background: linear-gradient(120deg, #ffffff 0%, #38bdf8 25%, #c084fc 50%, #f59e0b 75%, #ffffff 100%);
+            background-size: 300% 300%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 25px rgba(233, 213, 255, 0.4);
+            animation: holoFlow 6s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(56, 189, 248, 0.35);
         }
 
-        .dash-e-wisteria {
-            color: var(--wisteria-glow);
+        @keyframes holoFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* -E: Hyper-Voltage Neon Core */
+        .dash-e-plasma {
             font-family: 'Montserrat', sans-serif;
             font-style: italic;
-            padding-left: 3px;
-            text-shadow: 0 0 20px rgba(192, 132, 252, 0.9), 0 0 35px rgba(168, 85, 247, 0.6);
+            padding-left: 4px;
+            color: #38bdf8;
+            text-shadow: 
+                0 0 10px #38bdf8,
+                0 0 20px #818cf8,
+                0 0 40px #c084fc;
+            animation: plasmaFlicker 2.5s infinite alternate;
+        }
+
+        @keyframes plasmaFlicker {
+            0% { color: #38bdf8; text-shadow: 0 0 12px #38bdf8, 0 0 25px #818cf8; }
+            50% { color: #c084fc; text-shadow: 0 0 16px #c084fc, 0 0 32px #e879f9; }
+            100% { color: #38bdf8; text-shadow: 0 0 12px #38bdf8, 0 0 25px #818cf8; }
         }
 
         /* RADIANT GREY SUB-TEXTS */
@@ -243,7 +280,7 @@
 
         input:focus, select:focus {
             border-color: var(--radiant-grey);
-            box-shadow: 0 0 14px rgba(226, 232, 240, 0.28);
+            box-shadow: 0 0 14px rgba(226, 232, 240, 0.3);
             background: rgba(22, 11, 46, 0.7);
             color: #ffffff;
         }
@@ -270,16 +307,16 @@
 
         /* Radiant Silver Sheen Button */
         .btn-viewer {
-            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 50%, #94a3b8 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 50%, #94a3b8 100%);
             color: #0b0717;
             font-weight: 900;
-            box-shadow: 0 4px 20px rgba(226, 232, 240, 0.25);
-            text-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 22px rgba(226, 232, 240, 0.28);
+            text-shadow: 0 0 2px rgba(255, 255, 255, 0.4);
         }
 
         .btn-viewer:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 26px rgba(226, 232, 240, 0.45);
+            box-shadow: 0 6px 28px rgba(226, 232, 240, 0.45);
             filter: brightness(1.05);
         }
 
@@ -326,12 +363,12 @@
     <div class="grid-bg"></div>
 
     <div class="login-container">
-        <!-- Poster Style Header with Preserved Glowing Title -->
+        <!-- Interactive Holographic Header -->
         <div class="poster-header">
-            <div class="brand-title-wrap">
+            <div class="brand-title-wrap" title="NEXUS-E Core">
                 <span class="speed-bar"></span>
                 <h1 class="brand-logo-text">
-                    <span class="nexus-grad">NEXUS</span><span class="dash-e-wisteria">-E</span>
+                    <span class="nexus-holo">NEXUS</span><span class="dash-e-plasma">-E</span>
                 </h1>
                 <span class="speed-bar"></span>
             </div>
