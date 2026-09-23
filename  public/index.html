@@ -13,23 +13,23 @@
     
     <style>
         :root {
-            --bg-dark: #04070a;
-            --emerald-glow: #00ff9d;
-            --emerald-deep: #059669;
-            --pink-neon: #ff2a85;
-            --pink-accent: #f43f5e;
-            --glass-surface: rgba(8, 15, 23, 0.78);
-            --border-glow: rgba(0, 255, 157, 0.28);
+            --bg-night: #08030f;
+            --sakura-core: #ff6ba4;
+            --sakura-glow: #ffa2c7;
+            --sakura-light: #ffe4ef;
+            --wisteria-deep: #3b0e53;
+            --glass-surface: rgba(22, 10, 36, 0.78);
+            --border-glow: rgba(255, 107, 164, 0.3);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; transition: all 0.25s ease; }
 
         body {
-            background-color: var(--bg-dark);
+            background-color: var(--bg-night);
             background-image: 
-                radial-gradient(circle at 15% 15%, rgba(0, 255, 157, 0.12) 0%, transparent 45%),
-                radial-gradient(circle at 85% 85%, rgba(255, 42, 133, 0.1) 0%, transparent 45%),
-                radial-gradient(circle at 50% 0%, #062319 0%, var(--bg-dark) 75%);
+                radial-gradient(circle at 50% -15%, #4a125a 0%, #1a082b 45%, var(--bg-night) 80%),
+                radial-gradient(circle at 10% 85%, rgba(255, 107, 164, 0.15) 0%, transparent 45%),
+                radial-gradient(circle at 90% 20%, rgba(186, 85, 211, 0.12) 0%, transparent 40%);
             color: #f8fafc;
             display: flex;
             justify-content: center;
@@ -39,37 +39,36 @@
             position: relative;
         }
 
-        /* High-tech Cyber Grid */
+        /* Ethereal Sakura Petal Mesh Grid */
         .grid-bg {
             position: absolute;
             width: 100vw;
             height: 100vh;
             background-image: 
-                linear-gradient(rgba(0, 255, 157, 0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 157, 0.04) 1px, transparent 1px);
+                linear-gradient(rgba(255, 107, 164, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 107, 164, 0.04) 1px, transparent 1px);
             background-size: 32px 32px;
             z-index: -1;
         }
 
-        /* Glassmorphism Card with Dual Glow Border */
+        /* Frosted Night-Violet Glass Container */
         .login-container {
             background: var(--glass-surface);
             backdrop-filter: blur(20px);
             border: 1px solid var(--border-glow);
-            border-top: 1px solid rgba(0, 255, 157, 0.5);
-            border-right: 1px solid rgba(255, 42, 133, 0.35);
+            border-top: 1px solid rgba(255, 162, 199, 0.55);
             border-radius: 24px;
             padding: 38px 34px;
             width: 100%;
             max-width: 460px;
             box-shadow: 
-                0 20px 50px rgba(0, 0, 0, 0.65),
-                0 0 35px rgba(0, 255, 157, 0.15),
+                0 22px 55px rgba(0, 0, 0, 0.7),
+                0 0 40px rgba(255, 107, 164, 0.18),
                 inset 0 0 25px rgba(0, 0, 0, 0.5);
             position: relative;
         }
 
-        /* Top Ambient Glow Pill */
+        /* Glowing Top Sakura Blade Accent */
         .login-container::before {
             content: '';
             position: absolute;
@@ -77,7 +76,7 @@
             left: 20%;
             width: 60%;
             height: 3px;
-            background: linear-gradient(90deg, transparent, var(--emerald-glow), var(--pink-neon), transparent);
+            background: linear-gradient(90deg, transparent, var(--sakura-core), var(--sakura-glow), transparent);
             border-radius: 10px;
             filter: blur(1px);
         }
@@ -96,16 +95,16 @@
             gap: 12px;
         }
 
-        /* Gradient Speed Bars */
+        /* Glowing Sakura Speed Bars */
         .speed-bar {
             display: inline-block;
             width: 28px;
             height: 9px;
-            border-top: 3px solid var(--emerald-glow);
-            border-bottom: 3px solid var(--emerald-glow);
+            border-top: 3px solid var(--sakura-glow);
+            border-bottom: 3px solid var(--sakura-glow);
             border-radius: 2px;
             opacity: 0.95;
-            box-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+            box-shadow: 0 0 12px rgba(255, 107, 164, 0.6);
         }
 
         .brand-logo-text {
@@ -120,16 +119,16 @@
         .nexus-bold {
             color: #ffffff;
             font-family: 'Montserrat', sans-serif;
-            text-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.35);
         }
 
-        /* Cyber Pink Accent for '-E' */
+        /* Cherry Blossom Radiant Pink */
         .dash-e-italic {
-            color: var(--pink-neon);
+            color: var(--sakura-core);
             font-family: 'Montserrat', sans-serif;
             font-style: italic;
             padding-left: 3px;
-            text-shadow: 0 0 20px rgba(255, 42, 133, 0.8), 0 0 35px rgba(255, 42, 133, 0.4);
+            text-shadow: 0 0 20px rgba(255, 107, 164, 0.8), 0 0 35px rgba(255, 107, 164, 0.5);
         }
 
         .by-sparks-line {
@@ -142,11 +141,11 @@
 
         .script-by {
             font-family: 'Dancing Script', cursive;
-            color: var(--emerald-glow);
+            color: var(--sakura-glow);
             font-size: 1.45rem;
             font-weight: 700;
             transform: rotate(-4deg);
-            text-shadow: 0 0 10px rgba(0, 255, 157, 0.4);
+            text-shadow: 0 0 12px rgba(255, 107, 164, 0.5);
         }
 
         .sparks-techno {
@@ -154,24 +153,24 @@
             font-weight: 900;
             font-size: 1.05rem;
             letter-spacing: 4px;
-            color: #f1f5f9;
+            color: #fdf2f8;
             text-transform: uppercase;
         }
 
         .script-tagline {
             font-family: 'Dancing Script', cursive;
-            color: #e2e8f0;
+            color: var(--sakura-light);
             font-size: 1.35rem;
             font-weight: 600;
             letter-spacing: 0.6px;
             margin-top: 5px;
-            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
         }
 
         /* ===== CONTROLS & FORMS ===== */
         .tab-box {
             display: flex;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(10, 4, 18, 0.6);
             border-radius: 12px;
             margin-bottom: 22px;
             padding: 5px;
@@ -186,7 +185,7 @@
             border-radius: 8px;
             font-size: 0.85rem;
             font-weight: 700;
-            color: #94a3b8;
+            color: #cbd5e1;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -194,11 +193,11 @@
         }
 
         .tab-btn.active {
-            background: rgba(0, 255, 157, 0.15);
-            color: var(--emerald-glow);
-            border: 1px solid rgba(0, 255, 157, 0.4);
-            box-shadow: 0 0 15px rgba(0, 255, 157, 0.2);
-            text-shadow: 0 0 10px rgba(0, 255, 157, 0.4);
+            background: rgba(255, 107, 164, 0.18);
+            color: var(--sakura-glow);
+            border: 1px solid rgba(255, 107, 164, 0.45);
+            box-shadow: 0 0 15px rgba(255, 107, 164, 0.25);
+            text-shadow: 0 0 10px rgba(255, 107, 164, 0.5);
         }
 
         .form-section { display: none; animation: fadeIn 0.3s ease; }
@@ -211,15 +210,15 @@
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--emerald-glow);
+            color: var(--sakura-glow);
             font-size: 0.95rem;
         }
 
         input, select {
             width: 100%;
             padding: 13px 14px 13px 44px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #1e293b;
+            background: rgba(10, 4, 18, 0.6);
+            border: 1px solid #331d45;
             border-radius: 10px;
             color: white;
             font-size: 0.95rem;
@@ -227,12 +226,12 @@
         }
 
         input:focus, select:focus {
-            border-color: var(--emerald-glow);
-            box-shadow: 0 0 15px rgba(0, 255, 157, 0.35);
-            background: rgba(3, 10, 16, 0.7);
+            border-color: var(--sakura-core);
+            box-shadow: 0 0 16px rgba(255, 107, 164, 0.38);
+            background: rgba(18, 8, 30, 0.8);
         }
 
-        select option { background: #070d14; color: white; }
+        select option { background: #180927; color: white; }
 
         /* Action Buttons */
         .btn-submit {
@@ -252,29 +251,30 @@
             gap: 10px;
         }
 
-        /* Interactive User Button (Neon Green with Pink glow hover) */
+        /* Sakura Petal Gradient Button */
         .btn-viewer {
-            background: linear-gradient(135deg, #00ff9d 0%, #059669 100%);
-            color: #022013;
-            box-shadow: 0 4px 20px rgba(0, 255, 157, 0.35);
+            background: linear-gradient(135deg, #ff75a0 0%, #db2777 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 22px rgba(255, 117, 160, 0.4);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
         .btn-viewer:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 28px rgba(0, 255, 157, 0.5), 0 0 15px rgba(255, 42, 133, 0.3);
-            filter: brightness(1.06);
+            box-shadow: 0 6px 30px rgba(255, 117, 160, 0.6);
+            filter: brightness(1.08);
         }
 
-        /* Admin Button (Sleek Dark Cyber Pink Outline) */
+        /* Admin Portal Button */
         .btn-admin {
-            background: rgba(255, 42, 133, 0.08);
-            border: 1px solid rgba(255, 42, 133, 0.45);
-            color: #ffa5cb;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 107, 164, 0.4);
+            color: var(--sakura-light);
         }
 
         .btn-admin:hover {
-            background: rgba(255, 42, 133, 0.18);
-            box-shadow: 0 4px 18px rgba(255, 42, 133, 0.35);
+            background: rgba(255, 107, 164, 0.16);
+            box-shadow: 0 4px 20px rgba(255, 107, 164, 0.3);
             color: #ffffff;
             transform: translateY(-2px);
         }
@@ -283,11 +283,11 @@
             text-align: center;
             margin-top: 24px;
             font-size: 0.74rem;
-            color: #94a3b8;
+            color: #cbd5e1;
             letter-spacing: 2px;
             font-weight: 700;
         }
-        .footer-badge span { color: var(--emerald-glow); }
+        .footer-badge span { color: var(--sakura-glow); }
 
         @media (max-width: 480px) {
             .login-container { padding: 30px 20px; }
@@ -303,7 +303,7 @@
     <div class="grid-bg"></div>
 
     <div class="login-container">
-        <!-- Poster Style Header with Cyber Emerald + Pink Accent -->
+        <!-- Demon Slayer Cherry Blossom Header -->
         <div class="poster-header">
             <div class="brand-title-wrap">
                 <span class="speed-bar"></span>
