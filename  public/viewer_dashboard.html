@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus-E | Live Terminal</title>
     
-    <!-- Google Fonts: Outfit, JetBrains Mono & Poster Fonts (Montserrat + Dancing Script) -->
+    <!-- Google Fonts: Outfit, Montserrat, JetBrains Mono & Dancing Script -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=JetBrains+Mono:wght@400;700&family=Montserrat:ital,wght@0,800;0,900;1,900&family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
@@ -17,218 +17,324 @@
     
     <style>
         :root {
-            --bg-base: #050811;
-            --card-bg: rgba(13, 22, 41, 0.75);
-            --border: rgba(6, 182, 212, 0.25);
-            --cyan: #06b6d4;
-            --blue: #3b82f6;
-            --emerald: #10b981;
-            --red: #ef4444;
-            --amber: #f59e0b;
+            /* Anime Glowing Wisteria Night Base */
+            --bg-night: #070312;
+            
+            /* Glowing Accents */
+            --wisteria-glow: #c084fc;
+            --wisteria-neon: #a855f7;
+            --cyan-glow: #38bdf8;
+            --emerald-glow: #10b981;
+            --amber-glow: #f59e0b;
+            --red-glow: #ef4444;
+            
+            /* Radiant Metallic Grey / Silver Sheen Palette */
+            --radiant-grey-light: #f8fafc;
+            --radiant-grey: #e2e8f0;
+            --radiant-grey-muted: #94a3b8;
+            --radiant-grey-glow: rgba(226, 232, 240, 0.45);
+            
+            --glass-surface: rgba(18, 10, 36, 0.82);
+            --border-glow: rgba(226, 232, 240, 0.22);
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-base);
-            background-image: 
-                radial-gradient(circle at 50% -10%, #1e3a8a 0%, transparent 60%),
-                radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
-            color: #f8fafc;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container { max-width: 1150px; margin: 0 auto; }
 
-        /* Top Header Navigation & Poster Brand Logo */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; transition: all 0.25s ease; }
+        
+        body {
+            background-color: var(--bg-night);
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(168, 85, 247, 0.16) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(192, 132, 252, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 50% -10%, #290f5c 0%, var(--bg-night) 75%);
+            color: var(--radiant-grey);
+            min-height: 100vh;
+            padding: 24px 20px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        /* ===== HEADER & HOLOGRAPHIC LOGO ===== */
         header {
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
-            padding: 18px 24px; background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 20px; backdrop-filter: blur(16px); margin-bottom: 22px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(6, 182, 212, 0.05);
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+            padding: 18px 26px; background: var(--glass-surface); border: 1px solid var(--border-glow);
+            border-top: 1px solid rgba(248, 250, 252, 0.55);
+            border-radius: 20px; backdrop-filter: blur(24px); margin-bottom: 22px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(0, 0, 0, 0.5);
         }
-        .poster-brand-wrap {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            user-select: none;
-        }
+
         .brand-title-wrap {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            cursor: pointer;
         }
+
         .speed-bar {
             display: inline-block;
-            width: 22px;
-            height: 7px;
-            border-top: 2.5px solid #38bdf8;
-            border-bottom: 2.5px solid #38bdf8;
-            border-radius: 1.5px;
-            opacity: 0.9;
+            width: 26px;
+            height: 8px;
+            border-top: 2.5px solid var(--cyan-glow);
+            border-bottom: 2.5px solid var(--wisteria-glow);
+            border-radius: 2px;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+            animation: barPulse 3.5s ease-in-out infinite alternate;
         }
+
+        @keyframes barPulse {
+            0% { filter: hue-rotate(0deg) drop-shadow(0 0 4px var(--cyan-glow)); }
+            100% { filter: hue-rotate(180deg) drop-shadow(0 0 10px var(--wisteria-glow)); }
+        }
+
         .brand-logo-text {
             font-family: 'Montserrat', sans-serif;
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 900;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             line-height: 1;
-            text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
         }
-        .nexus-bold { color: #ffffff; font-family: 'Montserrat', sans-serif; }
-        .dash-e-italic { color: #38bdf8; font-family: 'Montserrat', sans-serif; font-style: italic; padding-left: 2px; }
-        
+
+        .nexus-holo {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(120deg, #ffffff 0%, #38bdf8 25%, #c084fc 50%, #f59e0b 75%, #ffffff 100%);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: holoFlow 6s ease-in-out infinite;
+        }
+
+        @keyframes holoFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .dash-e-plasma {
+            font-family: 'Montserrat', sans-serif;
+            font-style: italic;
+            padding-left: 3px;
+            color: #38bdf8;
+            text-shadow: 0 0 10px #38bdf8, 0 0 20px #818cf8, 0 0 35px #c084fc;
+        }
+
         .by-sparks-line {
             display: flex;
             align-items: center;
             gap: 6px;
-            margin-top: 2px;
+            margin-top: 3px;
         }
+
         .script-by {
             font-family: 'Dancing Script', cursive;
-            color: #38bdf8;
+            color: var(--radiant-grey);
             font-size: 1.15rem;
             font-weight: 700;
             transform: rotate(-3deg);
         }
+
         .sparks-techno {
             font-family: 'Montserrat', sans-serif;
             font-weight: 800;
-            font-size: 0.82rem;
+            font-size: 0.84rem;
             letter-spacing: 2.5px;
-            color: #cbd5e1;
+            color: var(--radiant-grey-light);
             text-transform: uppercase;
         }
+
         .script-tagline-nav {
             font-family: 'Dancing Script', cursive;
-            color: #94a3b8;
+            color: var(--radiant-grey-muted);
             font-size: 0.95rem;
             margin-left: 6px;
         }
 
+        /* User Header Actions */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-manual {
+            background: rgba(192, 132, 252, 0.15);
+            border: 1px solid var(--wisteria-glow);
+            color: var(--radiant-grey-light);
+            padding: 9px 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 15px rgba(192, 132, 252, 0.25);
+        }
+        .btn-manual:hover {
+            background: rgba(192, 132, 252, 0.28);
+            transform: translateY(-2px);
+        }
+
         .user-pill {
             display: flex; align-items: center; gap: 12px;
-            background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(11, 6, 24, 0.7); border: 1px solid rgba(226, 232, 240, 0.15);
             padding: 8px 16px; border-radius: 30px;
         }
         .user-info { text-align: right; }
-        .user-info .name { font-size: 0.95rem; font-weight: 700; color: #fff; }
-        .user-info .role { font-size: 0.75rem; color: var(--cyan); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .user-info .name { font-size: 0.92rem; font-weight: 700; color: var(--radiant-grey-light); }
+        .user-info .role { font-size: 0.72rem; color: var(--cyan-glow); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; }
+
         .btn-exit {
             background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4);
             color: #fca5a5; width: 34px; height: 34px; border-radius: 50%; display: flex;
-            align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;
+            align-items: center; justify-content: center; cursor: pointer;
         }
-        .btn-exit:hover { background: rgba(239, 68, 68, 0.3); color: #fff; }
+        .btn-exit:hover { background: rgba(239, 68, 68, 0.3); color: #fff; transform: translateY(-1px); }
 
         /* System Safety Status Bar */
         #safetyBanner {
             display: flex; align-items: center; justify-content: center; gap: 10px;
             padding: 14px 20px; border-radius: 14px; margin-bottom: 22px;
             font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem;
-            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
         .safety-normal {
-            background: rgba(16, 185, 129, 0.12); border: 1px solid var(--emerald); color: #6ee7b7;
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+            background: rgba(16, 185, 129, 0.15); border: 1px solid var(--emerald-glow); color: #6ee7b7;
         }
         .safety-alert {
-            background: rgba(239, 68, 68, 0.25); border: 1px solid var(--red); color: #fecaca;
-            animation: pulse 1s infinite alternate; box-shadow: 0 0 25px rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.28); border: 1px solid var(--red-glow); color: #fecaca;
+            animation: pulse 1s infinite alternate;
         }
         @keyframes pulse { from { opacity: 0.7; transform: scale(0.995); } to { opacity: 1; transform: scale(1); } }
 
         /* Cards & Grid Layouts */
-        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 22px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 22px; }
         .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 22px; }
         
         .card {
-            background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 18px; padding: 22px; backdrop-filter: blur(12px);
-            position: relative; overflow: hidden; transition: transform 0.2s;
+            background: var(--glass-surface); border: 1px solid var(--border-glow);
+            border-radius: 18px; padding: 22px; backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative; overflow: hidden;
         }
         .card:hover { transform: translateY(-2px); }
-        .card h4 { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 600; }
-        .card .val { font-size: 2.3rem; font-weight: 900; font-family: 'JetBrains Mono', monospace; }
+        .card h4 { color: var(--radiant-grey-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 700; }
+        .card .val { font-size: 2.3rem; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--radiant-grey-light); }
 
-        /* Appliance Status Badge */
+        /* Appliance Status Badge (Simple & Non-confusing) */
         .pill-badge {
             display: inline-block; padding: 6px 16px; border-radius: 20px;
             font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
         }
         .pill-active {
-            background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid var(--emerald);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+            background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid var(--emerald-glow);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
         }
         .pill-standby {
-            background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid #475569;
+            background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid #64748b;
         }
 
         /* Interactive Judge Control Box (Actuation Deck) */
         .demo-ctrl-card {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(10, 16, 30, 0.95));
-            border: 1px solid var(--cyan); border-radius: 20px; padding: 24px; margin-bottom: 24px;
-            box-shadow: 0 0 25px rgba(6, 182, 212, 0.12);
+            background: var(--glass-surface); border: 1px solid rgba(192, 132, 252, 0.35);
+            border-radius: 20px; padding: 24px; margin-bottom: 24px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
         }
         .demo-ctrl-header {
             display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
             margin-bottom: 16px;
         }
-        .demo-ctrl-header h3 { font-size: 1.15rem; color: #fff; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .demo-ctrl-header h3 { font-size: 1.15rem; color: var(--radiant-grey-light); font-weight: 800; display: flex; align-items: center; gap: 8px; }
         .lock-indicator {
             font-size: 0.8rem; font-weight: 700; font-family: 'JetBrains Mono', monospace;
-            padding: 5px 12px; border-radius: 20px; text-transform: uppercase;
+            padding: 6px 14px; border-radius: 20px; text-transform: uppercase;
         }
-        .lock-engaged { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--red); color: #fca5a5; }
-        .lock-unlocked { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--emerald); color: #6ee7b7; animation: pulse 1.2s infinite; }
+        .lock-engaged { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--red-glow); color: #fca5a5; }
+        .lock-unlocked { background: rgba(16, 185, 129, 0.2); border: 1px solid var(--emerald-glow); color: #6ee7b7; animation: pulse 1.2s infinite; }
 
         .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
         .btn-action {
             padding: 15px; border: none; border-radius: 12px; font-weight: 800; font-size: 0.9rem;
-            cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s;
+            cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .btn-action:disabled {
-            opacity: 0.35; cursor: not-allowed; filter: grayscale(80%);
+            opacity: 0.3; cursor: not-allowed; filter: grayscale(90%);
         }
-        .btn-action:not(:disabled):hover { transform: translateY(-2px); }
+        .btn-action:not(:disabled):hover { transform: translateY(-2px); filter: brightness(1.1); }
         .btn-action:not(:disabled):active { transform: scale(0.97); }
 
-        .btn-act-on { background: var(--emerald); color: #022c22; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
-        .btn-act-off { background: var(--red); color: #450a0a; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
-        .btn-act-auto { background: var(--cyan); color: #082f49; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3); }
-        .btn-act-rst { background: var(--amber); color: #451a03; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); }
+        .btn-act-on { background: var(--emerald-glow); color: #022c22; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35); }
+        .btn-act-off { background: var(--red-glow); color: #450a0a; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35); }
+        .btn-act-auto { background: linear-gradient(135deg, var(--cyan-glow), var(--wisteria-glow)); color: #082f49; font-weight: 900; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.35); }
+        .btn-act-rst { background: var(--amber-glow); color: #451a03; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35); }
 
         /* Team Showcase */
         .team-box {
-            background: var(--card-bg); border: 1px solid var(--border);
+            background: var(--glass-surface); border: 1px solid var(--border-glow);
             border-radius: 20px; padding: 26px; margin-top: 26px;
         }
         .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 10px; }
         .member-card {
-            background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(11, 6, 24, 0.7); border: 1px solid rgba(226, 232, 240, 0.08);
             border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
         }
         .dept-tag {
             font-size: 0.75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace;
-            padding: 2px 8px; border-radius: 6px; background: #1e293b; color: var(--cyan);
+            padding: 2px 8px; border-radius: 6px; background: #1f113a; color: var(--wisteria-glow);
         }
 
-        @media (max-width: 600px) {
-            .brand-logo-text { font-size: 1.5rem; }
+        /* ===== USER MANUAL MODAL ===== */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(12px);
+            display: none; justify-content: center; align-items: center; z-index: 1000;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: var(--glass-surface); border: 1px solid var(--wisteria-glow);
+            border-radius: 22px; padding: 28px; width: 100%; max-width: 600px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(192, 132, 252, 0.25);
+            animation: modalPop 0.25s ease-out;
+        }
+        @keyframes modalPop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
+        }
+        .modal-header h3 {
+            color: var(--radiant-grey-light); font-size: 1.25rem; font-weight: 800;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .manual-content-view {
+            background: rgba(11, 6, 24, 0.75); border: 1px solid rgba(226, 232, 240, 0.12);
+            border-radius: 12px; padding: 18px; color: var(--radiant-grey);
+            font-size: 0.9rem; line-height: 1.6; max-height: 380px; overflow-y: auto;
+            white-space: pre-wrap; font-family: 'Outfit', sans-serif;
+        }
+        .btn-close-modal {
+            width: 100%; margin-top: 18px; padding: 12px; border-radius: 10px;
+            background: linear-gradient(135deg, #c084fc, #a855f7); color: #0b041a;
+            font-weight: 800; font-size: 0.92rem; border: none; cursor: pointer;
+        }
+        .btn-close-modal:hover { filter: brightness(1.08); }
+
+        @media (max-width: 650px) {
+            .brand-logo-text { font-size: 1.6rem; }
             .script-tagline-nav { display: none; }
+            .btn-manual span { display: none; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Header Branding (Poster Style) -->
+    <!-- Header Branding (Anime Wisteria Theme) -->
     <header>
         <div class="poster-brand-wrap">
-            <div class="brand-title-wrap">
+            <div class="brand-title-wrap" title="NEXUS-E Core">
                 <span class="speed-bar"></span>
                 <div class="brand-logo-text">
-                    <span class="nexus-bold">NEXUS</span><span class="dash-e-italic">-E</span>
+                    <span class="nexus-holo">NEXUS</span><span class="dash-e-plasma">-E</span>
                 </div>
                 <span class="speed-bar"></span>
             </div>
@@ -239,12 +345,20 @@
             </div>
         </div>
 
-        <div class="user-pill">
-            <div class="user-info">
-                <div class="name" id="dispUserName">Guest Observer</div>
-                <div class="role" id="dispUserRole">Live Demo Session</div>
+        <div class="header-actions">
+            <!-- User Manual Trigger Button -->
+            <button class="btn-manual" onclick="openUserManual()">
+                <i class="fa-solid fa-book-open"></i> <span>User Manual</span>
+            </button>
+
+            <!-- User Info Pill -->
+            <div class="user-pill">
+                <div class="user-info">
+                    <div class="name" id="dispUserName">Guest Observer</div>
+                    <div class="role" id="dispUserRole">Live Demo Session</div>
+                </div>
+                <button class="btn-exit" onclick="exitDemo()" title="Exit Demo"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
             </div>
-            <button class="btn-exit" onclick="exitDemo()" title="Exit Demo"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
         </div>
     </header>
 
@@ -254,53 +368,53 @@
         <span id="safetyStatusText">ALL SYSTEMS NORMAL: GRID IS FULLY SECURED</span>
     </div>
 
-    <!-- Live Telemetry Matrix -->
+    <!-- Live Telemetry Matrix (Clean & Simple) -->
     <div class="grid-4">
         <div class="card">
             <h4>Live Room Occupancy</h4>
-            <div class="val" id="dispCount" style="color: var(--cyan);">0</div>
-            <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">Sequential IR + Vision Tracking</div>
+            <div class="val" id="dispCount" style="color: var(--cyan-glow);">0</div>
+            <div style="font-size: 0.8rem; color: var(--radiant-grey-muted); margin-top: 4px;">Sequential IR + Vision Tracking</div>
         </div>
         <div class="card">
             <h4>AC Line Current</h4>
-            <div class="val" id="dispCurrent" style="color: var(--emerald);">0.00 <span style="font-size:1.1rem;color:#64748b">A</span></div>
-            <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">Grid Voltage: <span id="dispVoltage" style="color:#cbd5e1">230</span> V</div>
+            <div class="val" id="dispCurrent" style="color: var(--emerald-glow);">0.00 <span style="font-size:1.1rem;color:#64748b">A</span></div>
+            <div style="font-size: 0.8rem; color: var(--radiant-grey-muted); margin-top: 4px;">Grid Voltage: <span id="dispVoltage" style="color:#cbd5e1">230</span> V</div>
         </div>
         <div class="card">
             <h4>Active Load Power</h4>
-            <div class="val" id="dispPower" style="color: var(--amber);">0.00 <span style="font-size:1.1rem;color:#64748b">W</span></div>
-            <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">ACS712 RMS True-Power</div>
+            <div class="val" id="dispPower" style="color: var(--amber-glow);">0.00 <span style="font-size:1.1rem;color:#64748b">W</span></div>
+            <div style="font-size: 0.8rem; color: var(--radiant-grey-muted); margin-top: 4px;">ACS712 RMS True-Power</div>
         </div>
         <div class="card">
             <h4>Appliance Status</h4>
             <div style="margin-top: 8px;">
                 <span id="dispAppliances" class="pill-badge pill-standby">STANDBY / OFF</span>
             </div>
-            <div style="font-size: 0.8rem; color: #64748b; margin-top: 14px;">Master Circuit: <b id="dispBreaker" style="color:var(--emerald)">ARMED</b></div>
+            <div style="font-size: 0.8rem; color: var(--radiant-grey-muted); margin-top: 14px;">Master Circuit: <b id="dispBreaker" style="color:var(--emerald-glow)">ARMED</b></div>
         </div>
     </div>
 
     <!-- ROI & Sustainability Impact -->
     <div class="grid-2">
-        <div class="card" style="border-left: 4px solid var(--cyan);">
+        <div class="card" style="border-left: 4px solid var(--cyan-glow);">
             <h4>Total Energy Conserved</h4>
-            <div class="val" id="dispEnergy" style="color: var(--cyan);">0.000 <span style="font-size:1.1rem;color:#64748b">kWh</span></div>
-            <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 6px;">Idle classroom load eliminated automatically</div>
+            <div class="val" id="dispEnergy" style="color: var(--cyan-glow);">0.000 <span style="font-size:1.1rem;color:#64748b">kWh</span></div>
+            <div style="font-size: 0.8rem; color: var(--radiant-grey-muted); margin-top: 6px;">Idle classroom load eliminated automatically</div>
         </div>
-        <div class="card" style="border-left: 4px solid var(--emerald);">
+        <div class="card" style="border-left: 4px solid var(--emerald-glow);">
             <h4>Financial Savings Accrued</h4>
-            <div class="val" id="dispMoney" style="color: var(--emerald);">&#8377; 0.00</div>
-            <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 6px;">Based on standard institutional tariff (&#8377; 8.00 / unit)</div>
+            <div class="val" id="dispMoney" style="color: var(--emerald-glow);">&#8377; 0.00</div>
+            <div style="font-size: 0.8rem; color: var(--radiant-grey-muted); margin-top: 6px;">Based on standard institutional tariff (&#8377; 8.00 / unit)</div>
         </div>
     </div>
 
     <!-- Interactive Judges Demonstration Deck -->
     <div class="demo-ctrl-card">
         <div class="demo-ctrl-header">
-            <h3><i class="fa-solid fa-sliders"></i> Interactive Edge Actuation Deck</h3>
+            <h3><i class="fa-solid fa-sliders" style="color: var(--wisteria-glow);"></i> Interactive Edge Actuation Deck</h3>
             <div id="lockBadge" class="lock-indicator lock-engaged"><i class="fa-solid fa-lock"></i> Observer Mode (Admin Controlled)</div>
         </div>
-        <p id="lockHelpText" style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 16px;">
+        <p id="lockHelpText" style="font-size: 0.85rem; color: var(--radiant-grey-muted); margin-bottom: 16px;">
             Sparks Admin jab control unlock karenge, tab aap yahan se direct classroom hardware switches test kar payenge.
         </p>
         <div class="controls-grid">
@@ -313,13 +427,13 @@
 
     <!-- Sparks Team Showcase & Project Profile -->
     <div class="team-box">
-        <h3 style="color: #fff; margin-bottom: 8px;">Nexus-E Engineering Innovation</h3>
-        <p style="font-size: 0.9rem; color: #cbd5e1; line-height: 1.6; margin-bottom: 18px;">
+        <h3 style="color: var(--radiant-grey-light); margin-bottom: 8px;">Nexus-E Engineering Innovation</h3>
+        <p style="font-size: 0.9rem; color: var(--radiant-grey-muted); line-height: 1.6; margin-bottom: 18px;">
             <b>Project Concept:</b> An automated edge infrastructure eliminating idle electrical consumption using sequential doorway gating, OpenCV computer vision validation, and emergency circuit isolation.<br>
             <b>प्रोजेक्ट सार:</b> कक्षाओं में बिजली की बर्बादी रोकने के लिए आईआर सेंसर और कंप्यूटर विज़न तकनीक का एक स्मार्ट समाधान, जो इमरजेंसी में ऑटोमैटिक पावर कट-ऑफ प्रदान करता है।
         </p>
 
-        <h5 style="color: var(--cyan); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; margin-bottom: 8px;">Core Engineering Team</h5>
+        <h5 style="color: var(--cyan-glow); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; margin-bottom: 8px;">Core Engineering Team</h5>
         <div class="team-grid">
             <div class="member-card"><b>Priyadarshan</b> <span class="dept-tag">ECE</span></div>
             <div class="member-card"><b>Sahil</b> <span class="dept-tag">EE</span></div>
@@ -328,11 +442,23 @@
             <div class="member-card"><b>Rupali</b> <span class="dept-tag">ECE</span></div>
         </div>
 
-        <h5 style="color: #94a3b8; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; margin: 18px 0 8px;">Supporting Engineering Members</h5>
+        <h5 style="color: var(--radiant-grey-muted); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; margin: 18px 0 8px;">Supporting Engineering Members</h5>
         <div class="team-grid">
             <div class="member-card"><b>Abhishek Patel</b> <span class="dept-tag">ECE</span></div>
             <div class="member-card"><b>Abhishek Dubey</b> <span class="dept-tag">EE</span></div>
         </div>
+    </div>
+</div>
+
+<!-- User Manual Modal -->
+<div class="modal-overlay" id="manualViewerModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-book-open" style="color: var(--wisteria-glow);"></i> User Manual & System Guidelines</h3>
+            <span onclick="closeUserManual()" style="cursor: pointer; color: var(--radiant-grey-muted); font-size: 1.2rem;"><i class="fa-solid fa-xmark"></i></span>
+        </div>
+        <div class="manual-content-view" id="modalManualText">Loading guidelines from Sparks Central Console...</div>
+        <button class="btn-close-modal" onclick="closeUserManual()">Got it / Close</button>
     </div>
 </div>
 
@@ -345,7 +471,6 @@
     document.getElementById("dispUserName").innerText = vName;
     document.getElementById("dispUserRole").innerText = vRole.toUpperCase() + " ACCESS";
 
-    // Firebase database key safe string banao
     const safeViewerKey = vRawId.replace(/[\.\#\$\[\]\/]/g, "_");
 
     // 2. Firebase Init
@@ -369,11 +494,10 @@
         id: vRawId,
         name: vName,
         role: vRole,
-        controlAllowed: false, // By default locked rahega
+        controlAllowed: false,
         joinedAt: Date.now()
     });
 
-    // Tab ya browser close hone par automatic list se remove ho jaye
     myViewerRef.onDisconnect().remove();
 
     // 4. Admin ke Individual Toggle ko Real-Time Listen karo
@@ -401,12 +525,14 @@
         }
     });
 
-    // 5. Telemetry Listener (/classroom/telemetry)
+    // 5. Telemetry Listener (/classroom/telemetry) with Safe Number Parsing
     db.ref("classroom/telemetry").on("value", snapshot => {
         const data = snapshot.val();
         if (!data) return;
 
-        document.getElementById("dispCount").innerText = data.headCount !== undefined ? data.headCount : 0;
+        const parsedCount = (data.headCount !== undefined) ? parseInt(data.headCount) : 0;
+        document.getElementById("dispCount").innerText = isNaN(parsedCount) ? 0 : parsedCount;
+        
         document.getElementById("dispCurrent").innerHTML = `${(data.currentRMS || 0).toFixed(2)} <span style="font-size:1.1rem;color:#64748b">A</span>`;
         document.getElementById("dispVoltage").innerText = data.voltage || 230;
         document.getElementById("dispPower").innerHTML = `${(data.powerWatts || 0).toFixed(2)} <span style="font-size:1.1rem;color:#64748b">W</span>`;
@@ -433,14 +559,39 @@
             banner.className = "safety-alert";
             statusText.innerText = "CRITICAL ALERT: " + alertMsg;
             breaker.innerText = "TRIPPED";
-            breaker.style.color = "var(--red)";
+            breaker.style.color = "var(--red-glow)";
         } else {
             banner.className = "safety-normal";
             statusText.innerText = "ALL SYSTEMS NORMAL: GRID IS FULLY SECURED";
             breaker.innerText = "ARMED";
-            breaker.style.color = "var(--emerald)";
+            breaker.style.color = "var(--emerald-glow)";
         }
     });
+
+    // 6. Real-time User Manual Listener from Firebase (/settings/userManual)
+    db.ref("settings/userManual").on("value", snapshot => {
+        const text = snapshot.val();
+        const modalTextElem = document.getElementById("modalManualText");
+        if (text && text.trim() !== "") {
+            modalTextElem.innerText = text;
+        } else {
+            modalTextElem.innerText = `NEXUS-E DEMONSTRATION & USER GUIDELINES:
+1. Welcome to the Nexus-E Autonomous Classroom Energy Management Terminal.
+2. By default, client terminals enter 'Observer Mode' to monitor live energy telemetry.
+3. Sparks Administrators can grant interactive actuation privileges to visiting tech fest judges.
+4. When granted control, use the 'Interactive Edge Actuation Deck' below to toggle room circuits.
+5. In AUTONOMOUS SENSOR MODE, sequential IR doorway sensors and computer vision manage appliance cut-off.
+6. The Software Circuit Breaker trips within 40ms upon detecting flame, toxic gas, or AC overload.`;
+        }
+    });
+
+    function openUserManual() {
+        document.getElementById("manualViewerModal").classList.add("active");
+    }
+
+    function closeUserManual() {
+        document.getElementById("manualViewerModal").classList.remove("active");
+    }
 
     // Dispatch Command from Viewer deck (only works when unlocked)
     function sendViewerCmd(cmd) {
