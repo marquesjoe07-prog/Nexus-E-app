@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sparks Central Console | Nexus-E</title>
     
-    <!-- Google Fonts: Outfit, JetBrains Mono & Poster Fonts (Montserrat + Dancing Script) -->
+    <!-- Google Fonts: Outfit, Montserrat, JetBrains Mono & Dancing Script -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=JetBrains+Mono:wght@400;700&family=Montserrat:ital,wght@0,800;0,900;1,900&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=JetBrains+Mono:wght@400;700&family=Montserrat:ital,wght@0,800;0,900;1,900&family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Firebase SDKs (Compat Version) -->
@@ -18,200 +18,322 @@
     
     <style>
         :root {
-            --bg-base: #070b14;
-            --card-bg: rgba(15, 23, 42, 0.8);
-            --border: rgba(56, 189, 248, 0.2);
-            --cyan: #38bdf8;
-            --emerald: #10b981;
-            --red: #ef4444;
-            --amber: #f59e0b;
+            /* Anime Glowing Wisteria Night Base */
+            --bg-night: #070312;
+            
+            /* Glowing Accents */
+            --wisteria-glow: #c084fc;
+            --wisteria-neon: #a855f7;
+            --cyan-glow: #38bdf8;
+            --emerald-glow: #10b981;
+            --amber-glow: #f59e0b;
+            --red-glow: #ef4444;
+            
+            /* Radiant Metallic Grey / Silver Sheen Palette */
+            --radiant-grey-light: #f8fafc;
+            --radiant-grey: #e2e8f0;
+            --radiant-grey-muted: #94a3b8;
+            --radiant-grey-glow: rgba(226, 232, 240, 0.45);
+            
+            --glass-surface: rgba(18, 10, 36, 0.82);
+            --border-glow: rgba(226, 232, 240, 0.22);
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: radial-gradient(circle at 50% 0%, #0f1d38 0%, var(--bg-base) 100%);
-            color: #f8fafc;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container { max-width: 1200px; margin: 0 auto; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; transition: all 0.25s ease; }
         
-        /* ===== HEADER & POSTER BRAND LOGO ===== */
+        body {
+            background-color: var(--bg-night);
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(168, 85, 247, 0.16) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(192, 132, 252, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 50% -10%, #290f5c 0%, var(--bg-night) 75%);
+            color: var(--radiant-grey);
+            min-height: 100vh;
+            padding: 24px 20px;
+        }
+
+        .container { max-width: 1250px; margin: 0 auto; }
+
+        /* ===== HEADER & HOLOGRAPHIC LOGO ===== */
         header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 16px 24px; background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 16px; backdrop-filter: blur(12px); margin-bottom: 20px;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+            padding: 18px 26px; background: var(--glass-surface); border: 1px solid var(--border-glow);
+            border-top: 1px solid rgba(248, 250, 252, 0.55);
+            border-radius: 20px; backdrop-filter: blur(24px); margin-bottom: 22px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(0, 0, 0, 0.5);
         }
-        .poster-brand-admin {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            user-select: none;
-        }
+
         .brand-title-wrap {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            cursor: pointer;
         }
+
         .speed-bar {
             display: inline-block;
-            width: 22px;
-            height: 7px;
-            border-top: 2.5px solid #38bdf8;
-            border-bottom: 2.5px solid #38bdf8;
-            border-radius: 1.5px;
-            opacity: 0.9;
+            width: 26px;
+            height: 8px;
+            border-top: 2.5px solid var(--cyan-glow);
+            border-bottom: 2.5px solid var(--wisteria-glow);
+            border-radius: 2px;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+            animation: barPulse 3.5s ease-in-out infinite alternate;
         }
+
+        @keyframes barPulse {
+            0% { filter: hue-rotate(0deg) drop-shadow(0 0 4px var(--cyan-glow)); }
+            100% { filter: hue-rotate(180deg) drop-shadow(0 0 10px var(--wisteria-glow)); }
+        }
+
         .brand-logo-text {
             font-family: 'Montserrat', sans-serif;
-            font-size: 1.7rem;
+            font-size: 2rem;
             font-weight: 900;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             line-height: 1;
-            text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
         }
-        .nexus-bold { color: #ffffff; font-family: 'Montserrat', sans-serif; }
-        .dash-e-italic { color: #38bdf8; font-family: 'Montserrat', sans-serif; font-style: italic; padding-left: 2px; }
-        
+
+        .nexus-holo {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(120deg, #ffffff 0%, #38bdf8 25%, #c084fc 50%, #f59e0b 75%, #ffffff 100%);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: holoFlow 6s ease-in-out infinite;
+        }
+
+        @keyframes holoFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .dash-e-plasma {
+            font-family: 'Montserrat', sans-serif;
+            font-style: italic;
+            padding-left: 3px;
+            color: #38bdf8;
+            text-shadow: 0 0 10px #38bdf8, 0 0 20px #818cf8, 0 0 35px #c084fc;
+        }
+
         .by-sparks-line {
             display: flex;
             align-items: center;
             gap: 6px;
-            margin-top: 2px;
+            margin-top: 3px;
         }
+
         .script-by {
             font-family: 'Dancing Script', cursive;
-            color: #38bdf8;
+            color: var(--radiant-grey);
             font-size: 1.15rem;
             font-weight: 700;
             transform: rotate(-3deg);
         }
+
         .sparks-techno {
             font-family: 'Montserrat', sans-serif;
             font-weight: 800;
-            font-size: 0.82rem;
+            font-size: 0.84rem;
             letter-spacing: 2.5px;
-            color: #cbd5e1;
+            color: var(--radiant-grey-light);
             text-transform: uppercase;
         }
+
         .console-tag {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: #64748b;
+            font-size: 0.74rem;
+            color: var(--radiant-grey-muted);
             margin-left: 8px;
             font-weight: 600;
         }
 
-        .btn-logout {
-            background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4);
-            color: #fca5a5; padding: 10px 18px; border-radius: 8px; font-weight: 600; cursor: pointer;
-            transition: all 0.2s;
+        .btn-header-action {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(226, 232, 240, 0.08);
+            border: 1px solid rgba(226, 232, 240, 0.3);
+            color: var(--radiant-grey-light);
+            padding: 9px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
         }
-        .btn-logout:hover { background: rgba(239, 68, 68, 0.25); color: #ffffff; }
+        .btn-header-action:hover { background: rgba(226, 232, 240, 0.18); transform: translateY(-2px); }
 
-        /* Safety Banner with Flashing Alert */
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.45);
+            color: #fca5a5;
+            padding: 9px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .btn-logout:hover { background: rgba(239, 68, 68, 0.25); color: #fff; transform: translateY(-2px); }
+
+        /* Safety Banner */
         #alert-banner {
-            padding: 14px 20px; border-radius: 12px; margin-bottom: 20px;
+            padding: 14px 20px; border-radius: 14px; margin-bottom: 20px;
             font-weight: 700; font-family: 'JetBrains Mono', monospace; text-align: center;
-            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
         .banner-normal {
-            background: rgba(16, 185, 129, 0.15); border: 1px solid var(--emerald); color: #6ee7b7;
+            background: rgba(16, 185, 129, 0.15); border: 1px solid var(--emerald-glow); color: #6ee7b7;
         }
         .banner-critical {
-            background: rgba(239, 68, 68, 0.25); border: 1px solid var(--red); color: #fecaca;
+            background: rgba(239, 68, 68, 0.28); border: 1px solid var(--red-glow); color: #fecaca;
             animation: pulse 1s infinite alternate;
         }
-        @keyframes pulse { from { opacity: 0.6; transform: scale(0.99); } to { opacity: 1; transform: scale(1); } }
+        @keyframes pulse { from { opacity: 0.6; transform: scale(0.995); } to { opacity: 1; transform: scale(1); } }
+
+        /* Operating Mode Status Callout */
+        .system-mode-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            background: rgba(10, 5, 24, 0.65);
+            border: 1px solid rgba(192, 132, 252, 0.25);
+            font-size: 0.88rem;
+        }
 
         /* Grid Layouts */
-        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 20px; }
         .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 20px; }
         
         .card {
-            background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 16px; padding: 20px; backdrop-filter: blur(10px);
+            background: var(--glass-surface); border: 1px solid var(--border-glow);
+            border-radius: 18px; padding: 22px; backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
         }
-        .card h4 { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-        .card .val { font-size: 2.2rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+        .card h4 { color: var(--radiant-grey-muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 700; }
+        .card .val { font-size: 2.2rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--radiant-grey-light); }
 
-        /* Appliance Status Pill */
-        .pill-badge {
-            display: inline-block; padding: 6px 14px; border-radius: 20px;
-            font-size: 0.85rem; font-weight: 700; text-transform: uppercase;
+        /* ===== ADVANCED CIRCUIT & APPLIANCE DIAGNOSTICS CARD ===== */
+        .circuit-diag-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
         }
-        .pill-active { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid var(--emerald); }
-        .pill-standby { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 1px solid #64748b; }
+        .circuit-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(10, 4, 22, 0.6);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.82rem;
+        }
+        .circuit-chip {
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+        .chip-armed { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid var(--emerald-glow); }
+        .chip-tripped { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid var(--red-glow); }
+        .chip-active { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid var(--cyan-glow); }
+        .chip-standby { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid #475569; }
 
         /* Controls Grid */
-        .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 12px; }
+        .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 14px; }
         .btn-ctrl {
-            padding: 15px; border: none; border-radius: 12px; font-weight: 700; font-size: 0.9rem;
-            cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: transform 0.1s;
+            padding: 15px; border: none; border-radius: 12px; font-weight: 800; font-size: 0.9rem;
+            cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
         }
+        .btn-ctrl:hover { transform: translateY(-2px); filter: brightness(1.08); }
         .btn-ctrl:active { transform: scale(0.97); }
-        .btn-force-on { background: var(--emerald); color: #022c22; }
-        .btn-force-off { background: var(--red); color: #450a0a; }
-        .btn-auto { background: var(--cyan); color: #082f49; }
-        .btn-reset { background: var(--amber); color: #451a03; }
+        .btn-force-on { background: var(--emerald-glow); color: #022c22; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35); }
+        .btn-force-off { background: var(--red-glow); color: #450a0a; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35); }
+        .btn-auto { background: linear-gradient(135deg, var(--cyan-glow), var(--wisteria-glow)); color: #082f49; font-weight: 900; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.35); }
+        .btn-reset { background: var(--amber-glow); color: #451a03; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35); }
 
         /* Switch Toggle */
         .switch { position: relative; display: inline-block; width: 48px; height: 26px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
             position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #334155; border-radius: 34px; transition: .3s;
+            background-color: #271442; border-radius: 34px; transition: .3s;
+            border: 1px solid rgba(226, 232, 240, 0.2);
         }
         .slider:before {
-            position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px;
-            background-color: white; border-radius: 50%; transition: .3s;
+            position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 3px;
+            background-color: #f1f5f9; border-radius: 50%; transition: .3s;
         }
-        input:checked + .slider { background-color: var(--emerald); }
+        input:checked + .slider { background-color: var(--emerald-glow); }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        /* Viewer Dynamic List */
+        /* Dynamic Viewers Rows */
         .viewer-row {
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(11, 17, 32, 0.7); border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px; padding: 12px 16px; transition: all 0.2s ease;
+            background: rgba(11, 6, 24, 0.7); border: 1px solid rgba(226, 232, 240, 0.1);
+            border-radius: 12px; padding: 12px 16px;
         }
-        .viewer-row:hover { border-color: var(--border); background: rgba(15, 23, 42, 0.9); }
-        .viewer-info { display: flex; flex-direction: column; gap: 3px; }
-        .viewer-name { font-weight: 700; color: #f8fafc; font-size: 0.95rem; }
-        .viewer-meta { font-size: 0.75rem; color: #94a3b8; display: flex; gap: 8px; align-items: center; }
+        .viewer-row:hover { border-color: var(--border-glow); background: rgba(22, 11, 46, 0.85); }
+        .viewer-name { font-weight: 700; color: var(--radiant-grey-light); font-size: 0.95rem; }
+        .viewer-meta { font-size: 0.75rem; color: var(--radiant-grey-muted); display: flex; gap: 8px; align-items: center; margin-top: 3px; }
         
         .role-tag {
-            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-            padding: 2px 6px; border-radius: 4px; letter-spacing: 0.5px;
+            font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+            padding: 2px 7px; border-radius: 4px; letter-spacing: 0.5px;
         }
         .role-judge { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
         .role-teacher { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
         .role-student { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
 
-        /* Admin Add Input */
+        /* Admin Add Form */
         .admin-form { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
-        .admin-form input {
-            flex: 1; min-width: 220px; padding: 10px 14px; background: #0b1120;
-            border: 1px solid var(--border); border-radius: 8px; color: #fff;
+        .admin-form input, .modal-textarea {
+            flex: 1; min-width: 220px; padding: 11px 14px; background: rgba(11, 6, 24, 0.7);
+            border: 1px solid #334155; border-radius: 10px; color: #fff; outline: none;
         }
+        .admin-form input:focus, .modal-textarea:focus { border-color: var(--wisteria-glow); box-shadow: 0 0 10px rgba(192, 132, 252, 0.3); }
         .btn-add {
-            padding: 10px 20px; background: #3b82f6; color: white; border: none;
-            border-radius: 8px; font-weight: 700; cursor: pointer;
+            padding: 11px 22px; background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            color: #090414; border: none; border-radius: 10px; font-weight: 800; cursor: pointer;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(10px);
+            display: none; justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: var(--glass-surface); border: 1px solid var(--border-glow);
+            border-radius: 20px; padding: 28px; width: 90%; max-width: 650px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
+        .modal-textarea {
+            width: 100%; min-height: 200px; resize: vertical; margin: 14px 0;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; line-height: 1.5;
         }
 
         /* Team Showcase */
         .team-section {
-            background: var(--card-bg); border: 1px solid var(--border);
+            background: var(--glass-surface); border: 1px solid var(--border-glow);
             border-radius: 20px; padding: 24px; margin-top: 24px;
         }
         .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 10px; }
         .member-pill {
-            background: rgba(11, 17, 32, 0.8); border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(11, 6, 24, 0.7); border: 1px solid rgba(226, 232, 240, 0.08);
             border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;
         }
         .dept-tag {
             font-size: 0.75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace;
-            padding: 2px 6px; border-radius: 4px; background: #1e293b; color: var(--cyan);
+            padding: 2px 7px; border-radius: 4px; background: #1f113a; color: var(--wisteria-glow);
         }
     </style>
 </head>
@@ -219,12 +341,12 @@
 
 <div class="container">
     <header>
-        <!-- Poster Style Brand Logo Header -->
+        <!-- Interactive Holographic Header -->
         <div class="poster-brand-admin">
-            <div class="brand-title-wrap">
+            <div class="brand-title-wrap" title="NEXUS-E Core">
                 <span class="speed-bar"></span>
                 <div class="brand-logo-text">
-                    <span class="nexus-bold">NEXUS</span><span class="dash-e-italic">-E</span>
+                    <span class="nexus-holo">NEXUS</span><span class="dash-e-plasma">-E</span>
                 </div>
                 <span class="speed-bar"></span>
             </div>
@@ -234,86 +356,128 @@
                 <span class="console-tag">// Central Control Room</span>
             </div>
         </div>
-        <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Secure Exit</button>
+
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <button class="btn-header-action" onclick="openManualEditor()">
+                <i class="fa-solid fa-book-open"></i> Edit Viewer Manual
+            </button>
+            <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Secure Exit</button>
+        </div>
     </header>
 
     <!-- Real-time Safety Status Banner -->
-    <div id="alert-banner" class="banner-normal">ALL SYSTEMS NORMAL: GRID SECURED</div>
+    <div id="alert-banner" class="banner-normal">ALL SYSTEMS NORMAL: GRID IS FULLY SECURED</div>
 
-    <!-- Row 1: Executive Telemetry -->
-    <div class="grid-4">
-        <div class="card">
-            <h4>Live Occupancy</h4>
-            <div class="val" id="disp-count" style="color: var(--cyan);">0</div>
-            <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">Sequential IR + Vision AI</div>
+    <!-- Operating Mode Callout: Solves Auto-Trip & Occupancy Confusion -->
+    <div class="system-mode-banner">
+        <div>
+            <span style="color: var(--radiant-grey-muted); font-size: 0.8rem; text-transform: uppercase; font-weight: 700;">Active Firmware Control State:</span>
+            <span id="currentModeLabel" style="font-weight: 800; font-family: 'JetBrains Mono', monospace; margin-left: 8px; color: var(--emerald-glow);">
+                AUTONOMOUS SENSOR MODE (ACTIVE)
+            </span>
         </div>
-        <div class="card">
-            <h4>AC Line Current</h4>
-            <div class="val" id="disp-current" style="color: var(--emerald);">0.00 <span style="font-size:1.1rem;color:#64748b">A</span></div>
-            <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">Grid Voltage: <span id="disp-voltage" style="color:#cbd5e1">230</span> V</div>
-        </div>
-        <div class="card">
-            <h4>Active Load Power</h4>
-            <div class="val" id="disp-power" style="color: var(--amber);">0.00 <span style="font-size:1.1rem;color:#64748b">W</span></div>
-            <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">ACS712 RMS True-Power</div>
-        </div>
-        <div class="card">
-            <h4>Appliance Grid Status</h4>
-            <div style="margin-top: 8px;">
-                <span id="disp-appliances" class="pill-badge pill-standby">STANDBY / OFF</span>
-            </div>
-            <div style="font-size: 0.8rem; color: #64748b; margin-top: 14px;">Master Relay: <b id="disp-breaker" style="color:var(--emerald)">ARMED</b></div>
+        <div id="modeHelperText" style="font-size: 0.78rem; color: var(--radiant-grey-muted);">
+            Sensors are controlling relay logic based on occupancy.
         </div>
     </div>
 
-    <!-- Row 2: Sustainability & ROI Financial Metrics -->
-    <div class="grid-2">
-        <div class="card" style="border-left: 4px solid var(--cyan);">
-            <h4>Total Energy Conserved (Automated Cutoff)</h4>
-            <div class="val" id="disp-energy" style="color: var(--cyan);">0.000 <span style="font-size:1.1rem;color:#64748b">kWh</span></div>
-            <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 6px;">Idle load eradication verified</div>
+    <!-- Row 1: Executive Telemetry & Diagnostics -->
+    <div class="grid-4">
+        <!-- Live Occupancy Card -->
+        <div class="card">
+            <h4>Live Room Occupancy</h4>
+            <div class="val" id="disp-count" style="color: var(--cyan-glow);">0</div>
+            <div style="font-size: 0.78rem; color: var(--radiant-grey-muted); margin-top: 6px;">
+                Input: Directional Doorway IR + Vision AI
+            </div>
+            <div style="margin-top: 10px; display: flex; gap: 6px;">
+                <button onclick="injectTestCount(1)" style="flex:1; padding: 5px; font-size: 0.72rem; background: rgba(56, 189, 248, 0.15); border: 1px solid var(--cyan-glow); color: #fff; border-radius: 6px; cursor: pointer;">Test +1 Person</button>
+                <button onclick="injectTestCount(0)" style="flex:1; padding: 5px; font-size: 0.72rem; background: rgba(239, 68, 68, 0.15); border: 1px solid var(--red-glow); color: #fff; border-radius: 6px; cursor: pointer;">Test Vacant (0)</button>
+            </div>
         </div>
-        <div class="card" style="border-left: 4px solid var(--emerald);">
+
+        <!-- AC Current Card -->
+        <div class="card">
+            <h4>AC Line Current (RMS)</h4>
+            <div class="val" id="disp-current" style="color: var(--emerald-glow);">0.00 <span style="font-size:1.1rem;color:#64748b">A</span></div>
+            <div style="font-size: 0.8rem; color: var(--radiant-grey-muted); margin-top: 6px;">Grid Reference: <span id="disp-voltage" style="color:#cbd5e1">230</span> V (50Hz)</div>
+        </div>
+
+        <!-- Active True Power -->
+        <div class="card">
+            <h4>Active Load Power</h4>
+            <div class="val" id="disp-power" style="color: var(--amber-glow);">0.00 <span style="font-size:1.1rem;color:#64748b">W</span></div>
+            <div style="font-size: 0.8rem; color: var(--radiant-grey-muted); margin-top: 6px;">ACS712 True RMS Sampling</div>
+        </div>
+
+        <!-- Detailed Appliance & Circuit Status Card -->
+        <div class="card">
+            <h4>Circuit & Load Diagnostics</h4>
+            <div class="circuit-diag-box">
+                <div class="circuit-row">
+                    <span>Master Breaker:</span>
+                    <span id="disp-breaker-chip" class="circuit-chip chip-armed">ARMED</span>
+                </div>
+                <div class="circuit-row">
+                    <span>Relay Bus Line:</span>
+                    <span id="disp-appliance-chip" class="circuit-chip chip-standby">STANDBY / ISOLATED</span>
+                </div>
+                <div class="circuit-row">
+                    <span>Power Channel Reason:</span>
+                    <span id="disp-reason-text" style="font-size: 0.75rem; color: #cbd5e1; font-weight: 600;">Zero Occupancy Cutoff</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 2: Sustainability & ROI Metrics -->
+    <div class="grid-2">
+        <div class="card" style="border-left: 4px solid var(--cyan-glow);">
+            <h4>Total Energy Conserved (Automated Cutoff)</h4>
+            <div class="val" id="disp-energy" style="color: var(--cyan-glow);">0.000 <span style="font-size:1.1rem;color:#64748b">kWh</span></div>
+            <div style="font-size: 0.8rem; color: var(--radiant-grey-muted); margin-top: 6px;">Cumulative idle power leakage eliminated</div>
+        </div>
+        <div class="card" style="border-left: 4px solid var(--emerald-glow);">
             <h4>Financial Savings (Institutional Tariff)</h4>
-            <div class="val" id="disp-money" style="color: var(--emerald);">&#8377; 0.00</div>
-            <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 6px;">Based on &#8377; 8.00 / commercial kWh unit</div>
+            <div class="val" id="disp-money" style="color: var(--emerald-glow);">&#8377; 0.00</div>
+            <div style="font-size: 0.8rem; color: var(--radiant-grey-muted); margin-top: 6px;">Calculated @ &#8377; 8.00 / commercial kWh unit</div>
         </div>
     </div>
 
     <!-- Central Control Override (Actuation Deck) -->
     <div class="card" style="margin-bottom: 20px;">
-        <h4 style="color: var(--cyan); margin-bottom: 4px;"><i class="fa-solid fa-sliders"></i> Interactive Edge Actuation Deck (Staff Override)</h4>
-        <p style="font-size: 0.85rem; color: #94a3b8;">Manual commands write directly to edge ESP32 via Firebase</p>
+        <h4 style="color: var(--wisteria-glow); margin-bottom: 4px;"><i class="fa-solid fa-sliders"></i> Central Staff Actuation Matrix</h4>
+        <p style="font-size: 0.85rem; color: var(--radiant-grey-muted);">Commands dispatch directly to ESP32 firmware via Firebase real-time bridge.</p>
         <div class="controls-grid">
             <button class="btn-ctrl btn-force-on" onclick="sendCmd('FORCE_ON')">Force All ON</button>
             <button class="btn-ctrl btn-force-off" onclick="sendCmd('FORCE_OFF')">Force All OFF</button>
-            <button class="btn-ctrl btn-auto" onclick="sendCmd('AUTO')">Resume Auto (IR/AI)</button>
+            <button class="btn-ctrl btn-auto" onclick="sendCmd('AUTO')">Resume Auto (Sensors)</button>
             <button class="btn-ctrl btn-reset" onclick="sendCmd('RESET_BREAKER')">Reset Breaker</button>
         </div>
     </div>
 
-    <!-- Live Connected Viewers & Individual Control Delegation Deck -->
+    <!-- Live Connected Viewers & Delegation Deck -->
     <div class="card" style="margin-bottom: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
             <div>
-                <h4 style="color: var(--cyan); margin-bottom: 2px;">
+                <h4 style="color: var(--cyan-glow); margin-bottom: 2px;">
                     <i class="fa-solid fa-users-gear"></i> Live Connected Viewers & Access Delegation
                 </h4>
-                <p style="font-size: 0.85rem; color: #94a3b8;">
-                    Jus viewer/judge ke aage ka toggle switch ON karenge, sirf usi ke phone par control panel active hoga.
+                <p style="font-size: 0.85rem; color: var(--radiant-grey-muted);">
+                    Jus viewer ya judge ke aage ka toggle switch ON karenge, sirf usi ke phone screen par control deck unlock hoga.
                 </p>
             </div>
-            <span id="activeViewersCount" class="dept-tag" style="background: rgba(56, 189, 248, 0.15); border: 1px solid var(--cyan); font-size: 0.82rem;">0 Viewers Online</span>
+            <span id="activeViewersCount" class="dept-tag" style="font-size: 0.82rem;">0 Viewers Online</span>
         </div>
         
         <div id="viewersList" style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
-            <p style="color: #64748b; font-size: 0.85rem; font-style: italic;">No viewers currently connected. Audience ya judges jab login karenge toh unki list yahan aayegi...</p>
+            <p style="color: var(--radiant-grey-muted); font-size: 0.85rem; font-style: italic;">No viewers currently connected. Audience ya judges jab login karenge toh unki list yahan aayegi...</p>
         </div>
     </div>
 
     <!-- Admin Registration -->
     <div class="card" style="margin-bottom: 24px;">
-        <h4 style="color: var(--cyan);"><i class="fa-solid fa-user-shield"></i> System Administrator Management</h4>
+        <h4 style="color: var(--wisteria-glow);"><i class="fa-solid fa-user-shield"></i> System Administrator Management</h4>
         <div class="admin-form">
             <input type="email" id="newAdminEmail" placeholder="admin@sparkstechno.edu">
             <input type="password" id="newAdminPass" placeholder="Admin Password (min 6 char)">
@@ -324,11 +488,11 @@
 
     <!-- Team Sparks Credits -->
     <div class="team-section">
-        <h3 style="color: #fff; margin-bottom: 8px;">Nexus-E: Autonomous Classroom Energy Core</h3>
-        <p style="font-size: 0.9rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 16px;">
+        <h3 style="color: var(--radiant-grey-light); margin-bottom: 8px;">Nexus-E: Autonomous Classroom Energy Core</h3>
+        <p style="font-size: 0.9rem; color: var(--radiant-grey-muted); line-height: 1.5; margin-bottom: 16px;">
             <b>Project Concept:</b> An automated edge infrastructure eliminating idle electrical consumption using sequential doorway gating, OpenCV computer vision validation, and emergency circuit isolation.
         </p>
-        <h5 style="color: var(--cyan); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; margin-bottom: 8px;">Core Engineering Team</h5>
+        <h5 style="color: var(--cyan-glow); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; margin-bottom: 8px;">Core Engineering Team</h5>
         <div class="team-grid">
             <div class="member-pill"><b>Priyadarshan</b> <span class="dept-tag">ECE</span></div>
             <div class="member-pill"><b>Sahil</b> <span class="dept-tag">EE</span></div>
@@ -336,10 +500,27 @@
             <div class="member-pill"><b>Kriti</b> <span class="dept-tag">ECE</span></div>
             <div class="member-pill"><b>Rupali</b> <span class="dept-tag">ECE</span></div>
         </div>
-        <h5 style="color: #94a3b8; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; margin: 16px 0 8px;">Supporting Engineering Members</h5>
+        <h5 style="color: var(--radiant-grey-muted); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; margin: 16px 0 8px;">Supporting Engineering Members</h5>
         <div class="team-grid">
             <div class="member-pill"><b>Abhishek Patel</b> <span class="dept-tag">ECE</span></div>
             <div class="member-pill"><b>Abhishek Dubey</b> <span class="dept-tag">EE</span></div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Edit Viewer User Manual -->
+<div class="modal-overlay" id="manualModal">
+    <div class="modal-box">
+        <h3 style="color: var(--radiant-grey-light); display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-book" style="color: var(--wisteria-glow);"></i> Edit Viewer User Manual & Guidelines
+        </h3>
+        <p style="font-size: 0.82rem; color: var(--radiant-grey-muted); margin-top: 4px;">
+            Yeh instructions viewer dashboard par judges aur audience ko read karne ke liye popup hongi.
+        </p>
+        <textarea id="manualTextContent" class="modal-textarea" placeholder="Enter step-by-step guidance for viewers and judges..."></textarea>
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <button onclick="closeManualEditor()" style="padding: 10px 18px; border-radius: 8px; background: transparent; border: 1px solid #475569; color: #fff; cursor: pointer;">Cancel</button>
+            <button onclick="saveManualToFirebase()" style="padding: 10px 22px; border-radius: 8px; background: var(--wisteria-glow); border: none; color: #0b041a; font-weight: 800; cursor: pointer;">Save & Publish to Viewers</button>
         </div>
     </div>
 </div>
@@ -365,7 +546,7 @@
         if (!user) window.location.href = "index.html";
     });
 
-    // Web Audio Synthesizer for Alert Siren (No audio files required)
+    // Web Audio Synthesizer for Alert Siren
     let audioCtx = null;
     function playSiren() {
         try {
@@ -384,55 +565,93 @@
         } catch(e) {}
     }
 
-    // Sahil Schema: Listen to /classroom/telemetry
+    // 1. Telemetry Listener with Advanced Circuit Breakdown
     db.ref("classroom/telemetry").on("value", snapshot => {
         const data = snapshot.val();
         if (!data) return;
 
-        document.getElementById("disp-count").innerText = data.headCount !== undefined ? data.headCount : 0;
+        const parsedHeadCount = (data.headCount !== undefined) ? parseInt(data.headCount) : 0;
+        document.getElementById("disp-count").innerText = parsedHeadCount;
+        
         document.getElementById("disp-current").innerHTML = `${(data.currentRMS || 0).toFixed(2)} <span style="font-size:1.1rem;color:#64748b">A</span>`;
         document.getElementById("disp-voltage").innerText = data.voltage || 230;
         document.getElementById("disp-power").innerHTML = `${(data.powerWatts || 0).toFixed(2)} <span style="font-size:1.1rem;color:#64748b">W</span>`;
         document.getElementById("disp-energy").innerHTML = `${(data.energySavedKWh || 0).toFixed(3)} <span style="font-size:1.1rem;color:#64748b">kWh</span>`;
         document.getElementById("disp-money").innerText = `₹ ${(data.moneySavedINR || 0).toFixed(2)}`;
 
-        // Appliance Active/Standby Pill
-        const appPill = document.getElementById("disp-appliances");
-        if (data.appliancesOn) {
-            appPill.className = "pill-badge pill-active";
-            appPill.innerText = "ACTIVE (LOAD ENGAGED)";
-        } else {
-            appPill.className = "pill-badge pill-standby";
-            appPill.innerText = "STANDBY / OFF";
-        }
-
-        // Safety Status & Master Trip Handling
+        // Detailed Circuit Diagnostics
+        const breakerChip = document.getElementById("disp-breaker-chip");
+        const applianceChip = document.getElementById("disp-appliance-chip");
+        const reasonText = document.getElementById("disp-reason-text");
         const banner = document.getElementById("alert-banner");
-        const breaker = document.getElementById("disp-breaker");
+        
         const alertMsg = data.alertStatus || "Normal";
+        const isMasterTripped = (data.masterTripped === true || alertMsg.includes("CRITICAL"));
 
-        if (alertMsg.includes("FIRE") || alertMsg.includes("SMOKE") || alertMsg.includes("SHORT CIRCUIT") || alertMsg.includes("CRITICAL")) {
+        if (isMasterTripped) {
+            breakerChip.className = "circuit-chip chip-tripped";
+            breakerChip.innerText = "TRIPPED";
+            applianceChip.className = "circuit-chip chip-tripped";
+            applianceChip.innerText = "EMERGENCY CUTOFF";
+            reasonText.innerText = "Safety Interlock: " + alertMsg;
+            reasonText.style.color = "var(--red-glow)";
+
             banner.className = "banner-critical";
-            banner.innerText = "CRITICAL ALERT: " + alertMsg;
-            breaker.innerText = "TRIPPED";
-            breaker.style.color = "var(--red)";
+            banner.innerText = "CRITICAL ALERT: " + alertMsg + " (Relays Isolated)";
             playSiren();
         } else {
+            breakerChip.className = "circuit-chip chip-armed";
+            breakerChip.innerText = "ARMED (OK)";
             banner.className = "banner-normal";
-            banner.innerText = "ALL SYSTEMS NORMAL: GRID SECURED";
-            breaker.innerText = "ARMED";
-            breaker.style.color = "var(--emerald)";
+            banner.innerText = "ALL SYSTEMS NORMAL: GRID IS FULLY SECURED";
+
+            if (data.appliancesOn) {
+                applianceChip.className = "circuit-chip chip-active";
+                applianceChip.innerText = "ACTIVE (ENGAGED)";
+                reasonText.innerText = "Load energized (Occupancy > 0 or Forced)";
+                reasonText.style.color = "var(--cyan-glow)";
+            } else {
+                applianceChip.className = "circuit-chip chip-standby";
+                applianceChip.innerText = "STANDBY (OFF)";
+                reasonText.innerText = (parsedHeadCount === 0) ? "Autonomous Cutoff (0 Occupancy)" : "Staff Forced Standby";
+                reasonText.style.color = "var(--radiant-grey-muted)";
+            }
         }
     });
 
-    // ===== DYNAMIC GRANULAR VIEWER MANAGEMENT =====
+    // 2. Firmware Command Mode Listener
+    db.ref("classroom/control/manualCommand").on("value", snapshot => {
+        const cmd = snapshot.val() || "AUTO";
+        const modeLabel = document.getElementById("currentModeLabel");
+        const modeHelper = document.getElementById("modeHelperText");
+
+        if (cmd === "AUTO") {
+            modeLabel.innerText = "AUTONOMOUS SENSOR MODE (ACTIVE)";
+            modeLabel.style.color = "var(--emerald-glow)";
+            modeHelper.innerText = "IR doorway sensors & OpenCV vision dynamically control power.";
+        } else if (cmd === "FORCE_ON") {
+            modeLabel.innerText = "MANUAL OVERRIDE: FORCE ALL ON";
+            modeLabel.style.color = "var(--amber-glow)";
+            modeHelper.innerText = "⚠️ Relays forced permanently ON. Sensors are temporarily bypassed.";
+        } else if (cmd === "FORCE_OFF") {
+            modeLabel.innerText = "MANUAL OVERRIDE: FORCE ALL OFF";
+            modeLabel.style.color = "var(--red-glow)";
+            modeHelper.innerText = "⚠️ Relays forced permanently OFF. Click [Resume Auto] to reactivate sensors.";
+        } else if (cmd === "RESET_BREAKER") {
+            modeLabel.innerText = "BREAKER RESET SIGNAL DISPATCHED";
+            modeLabel.style.color = "var(--cyan-glow)";
+            modeHelper.innerText = "System resetting trips and restoring safety thresholds.";
+        }
+    });
+
+    // 3. Dynamic Granular Viewer Management
     db.ref("viewers").on("value", snapshot => {
         const viewersContainer = document.getElementById("viewersList");
         const countBadge = document.getElementById("activeViewersCount");
         const data = snapshot.val();
 
         if (!data || Object.keys(data).length === 0) {
-            viewersContainer.innerHTML = '<p style="color: #64748b; font-size: 0.85rem; font-style: italic;">No viewers currently connected. Audience ya judges jab login karenge toh unki list yahan aayegi...</p>';
+            viewersContainer.innerHTML = '<p style="color: var(--radiant-grey-muted); font-size: 0.85rem; font-style: italic;">No viewers currently connected. Audience ya judges jab login karenge toh unki list yahan aayegi...</p>';
             countBadge.innerText = "0 Viewers Online";
             return;
         }
@@ -461,8 +680,8 @@
                     </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 14px;">
-                    <span style="font-size: 0.8rem; font-weight: 700; color: ${viewer.controlAllowed ? 'var(--emerald)' : '#64748b'};">
-                        ${viewer.controlAllowed ? 'CONTROL ACTIVE' : 'LOCKED'}
+                    <span style="font-size: 0.78rem; font-weight: 800; color: ${viewer.controlAllowed ? 'var(--emerald-glow)' : 'var(--radiant-grey-muted)'}; font-family: 'JetBrains Mono', monospace;">
+                        ${viewer.controlAllowed ? 'CONTROL GRANTED' : 'LOCKED'}
                     </span>
                     <label class="switch">
                         <input type="checkbox" ${isChecked} onchange="toggleIndividualViewer('${vId}', this.checked)">
@@ -474,21 +693,47 @@
         });
     });
 
-    // Toggle individual viewer permission
     function toggleIndividualViewer(viewerKey, isAllowed) {
         db.ref("viewers/" + viewerKey).update({
             controlAllowed: isAllowed
-        }).then(() => {
-            console.log(`Permission updated for ${viewerKey}: ${isAllowed}`);
-        }).catch(err => {
-            console.error("Error updating permission:", err);
         });
     }
 
-    // Sahil Schema: Write directly to /classroom/control/manualCommand
     function sendCmd(cmd) {
         db.ref("classroom/control/manualCommand").set(cmd).then(() => {
             console.log("Command dispatched:", cmd);
+        });
+    }
+
+    function injectTestCount(count) {
+        db.ref("classroom/telemetry/headCount").set(count);
+    }
+
+    // 4. User Manual Modal Management (Direct Firebase Sync)
+    const defaultManual = `NEXUS-E SYSTEM DEMONSTRATION & USER GUIDELINES:
+1. Welcome to the Nexus-E Autonomous Classroom Energy Management Console.
+2. By default, client terminals enter 'Observer Mode' to monitor live energy telemetry.
+3. Sparks Administrators can grant interactive actuation privileges to visiting tech fest judges.
+4. When granted control, use the 'Interactive Edge Actuation Deck' below to toggle room circuits.
+5. In AUTONOMOUS SENSOR MODE, sequential IR doorway sensors and computer vision manage appliance cut-off.
+6. The Software Circuit Breaker trips within 40ms upon detecting flame, toxic gas, or AC overload.`;
+
+    function openManualEditor() {
+        db.ref("settings/userManual").once("value").then(snap => {
+            document.getElementById("manualTextContent").value = snap.val() || defaultManual;
+            document.getElementById("manualModal").classList.add("active");
+        });
+    }
+
+    function closeManualEditor() {
+        document.getElementById("manualModal").classList.remove("active");
+    }
+
+    function saveManualToFirebase() {
+        const text = document.getElementById("manualTextContent").value.trim();
+        db.ref("settings/userManual").set(text).then(() => {
+            alert("Viewer User Manual updated and published to all client terminals!");
+            closeManualEditor();
         });
     }
 
@@ -498,7 +743,7 @@
         const msg = document.getElementById("adminStatusMsg");
 
         if (!email || pass.length < 6) {
-            msg.style.color = "var(--amber)";
+            msg.style.color = "var(--amber-glow)";
             msg.innerText = "Minimum 6 characters password aur valid email enter karein.";
             return;
         }
@@ -506,14 +751,14 @@
         const secApp = firebase.initializeApp(firebaseConfig, "AdminCreatorApp");
         secApp.auth().createUserWithEmailAndPassword(email, pass)
             .then(() => {
-                msg.style.color = "var(--emerald)";
+                msg.style.color = "var(--emerald-glow)";
                 msg.innerText = `New admin (${email}) successfully added!`;
                 document.getElementById("newAdminEmail").value = "";
                 document.getElementById("newAdminPass").value = "";
                 secApp.delete();
             })
             .catch(err => {
-                msg.style.color = "var(--red)";
+                msg.style.color = "var(--red-glow)";
                 msg.innerText = err.message;
                 secApp.delete();
             });
